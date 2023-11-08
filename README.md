@@ -1,4 +1,4 @@
 # CS3101_project
-CS3101 Project - A Library program built using C.
+CS3101 Project - A Library program built using C.</br>
 NOTE TO THE MEMBERS:
-Fork it and request pulls. Donot clone and push.
+Commit and push to the respective branches only. Merging with main shall be done after meetups.
