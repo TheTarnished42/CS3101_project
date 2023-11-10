@@ -37,9 +37,21 @@ void main()
         switch(*usertype)
         {
             case 1: flag_0=0;
+                    printf("Login successful!\n");
+                    printf("Welcome %s\n",uid);
+                    printf("You have logged in as an Admin.\n");
+                    printf("Press Enter to Continue");
+                    getchar();
+                    getchar();
                     flag_1=1;
                     break;
             case 2: flag_0=0;
+                    printf("Login successful!\n");
+                    printf("Welcome %s\n",uid);
+                    printf("You have logged in as a Member.\n");
+                    printf("Press Enter to Continue");
+                    getchar();
+                    getchar();
                     flag_1=1;
                     break;
             default: system("clear");
@@ -56,17 +68,9 @@ void main()
     while(flag_1==1){
         switch(*usertype){
             case 1: admin_menu(action);
-                    system("clear");
-                    printf("Login successful!\n");
-                    printf("Welcome %s\n",uid);
-                    printf("You have logged in as an Admin.\n");
                     flag_1=0;
                     break;
             case 2: member_menu(action);
-                    system("clear");
-                    printf("Login successful!\n");
-                    printf("Welcome %s\n",uid);
-                    printf("You have logged in as a Member.\n");
                     flag_1=0;
                     break;
             default: *action=-1;

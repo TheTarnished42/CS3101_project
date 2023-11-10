@@ -15,7 +15,7 @@ void admin_menu(int *action)
     printf("[6]\t\tAdd New USER\n\n");
     printf("Enter code for the action: ");
     scanf("%d",action);
-    if (*action!=1 && *action!=2 && *action!=3 && *action!=4 && *action!=5 && action!=6)
+    if (*action!=1 && *action!=2 && *action!=3 && *action!=4 && *action!=5 && *action!=6)
         {
                 *action=-1;
         }
