@@ -8,8 +8,15 @@
 #include "./bin/login_menu.c"
 #include "./bin/admin_menu.c"
 #include "./bin/member_menu.c"
+#include "./bin/browse.c"
+#include "./bin/add_book.c"
+#include "./bin/remove_book.c"
+#include "./bin/view_current_issue.c"
+#include "./bin/view_lib_log.c"
+#include "./bin/add_user.c"
+#include "./bin/request_item.c"
+#include "./bin/submit_book.c"
 
-// command always returns back to main
 void main()
 {
     system("clear");
@@ -29,6 +36,7 @@ void main()
     char *password= malloc(100);
     char *uid= malloc(100);
 
+// Take login info from the user and check wether the UID and PASSWORD is valid or not
     int flag_0=1;
     int flag_1=0;
     do{
@@ -62,7 +70,7 @@ void main()
         }
     }while (flag_0==1);
     
-    //printf("USER-ID: %s, PASSWORD: %s, USERTYPE: %d\n", uid, password, *usertype);
+// Take ACTION from the user and checking if it is valid or not
     int *action=malloc(sizeof(int));
 
     while(flag_1==1){
@@ -84,8 +92,37 @@ void main()
     }
 
     printf("USER-ID: %s, PASSWORD: %s, USERTYPE: %d, ACTION: %d\n", uid, password, *usertype, *action);
-//    printf("Enter 1 to select action again, 0 to continue.\n");
 
-//}while (flag_1==1)
+    switch(*usertype){
+        case 1:{
+            switch(*action){
+                case 1: browse();
+                        break;
+                case 2: add_book();
+                        break;
+                case 3: remove_book();
+                        break;
+                case 4: view_current_issue();
+                        break;
+                case 5: view_lib_log();
+                        break;
+                case 6: add_user();
+                        break;
+            }
+            break;
+        }
+        case 2:{
+            switch(*action){
+                case 1: browse();
+                        break;
+                case 2: request_item();
+                        break;
+                case 3: submit_book();
+                        break;
+            }
+            break;
+        }
+
+    }
 
 }
