@@ -13,4 +13,14 @@ typedef struct book
     int issued_UID[50];
 } BOOK;
 
+typedef struct member
+{
+    char m_id[20];
+    char first_name[20];
+    char last_name[20];
+    char m_psswd[20];
+    char type[2];
+
+} MEMBER;
+
 #endif //STRUCTS_H
