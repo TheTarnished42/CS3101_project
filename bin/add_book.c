@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "structs.h"
-#include "./browse.c"
 
 int *generate_uid(BOOK *b)
 {
@@ -106,11 +105,12 @@ int add_book()
     fclose(booksptr);
     return 0;
 }
-
+/*
 void main()
 {
     // system("clear");
     add_book();
 
     printf("\nExit\n");
-}
+    
+}*/

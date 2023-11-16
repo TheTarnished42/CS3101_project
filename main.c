@@ -16,6 +16,7 @@
 #include "./bin/add_user.c"
 #include "./bin/request_item.c"
 #include "./bin/submit_book.c"
+#include "./bin/search.c"
 
 void main()
 {
@@ -96,7 +97,7 @@ void main()
     switch(*usertype){
         case 1:{
             switch(*action){
-                case 1: browse();
+                case 1: search();
                         break;
                 case 2: add_book();
                         break;
@@ -113,7 +114,7 @@ void main()
         }
         case 2:{
             switch(*action){
-                case 1: browse();
+                case 1: search();
                         break;
                 case 2: request_item();
                         break;
