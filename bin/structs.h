@@ -9,9 +9,9 @@ typedef struct book
     int available_copies;
     int issued_copies;
     int categories[50];
-    long long isbn;
-    int available_UID[50];
-    int issued_UID[50];
+    char isbn[14];
+    char available_UID[50][10];
+    char issued_UID[50][10];
 } BOOK;
 
 typedef struct member
@@ -30,4 +30,4 @@ typedef struct category
     char name[20];
 } CAT;
 
-#endif //STRUCTS_H
+#endif // STRUCTS_H

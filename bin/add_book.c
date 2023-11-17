@@ -2,28 +2,75 @@
 #include <stdlib.h>
 #include <string.h>
 #include "structs.h"
-#include "./browse.c"
+// #include "./browse.c"
 
-int *generate_uid(BOOK *b)
+int *searchBook(BOOK b)
 {
-    FILE *uniq;
-    uniq = fopen("../BooksDB/UID.txt", "r+");
-    int n, i, j;
-    fread(&n, sizeof(int), 1, uniq);
+    printf("In searchbook\n\n");
+    FILE *fptr;
+    BOOK b1;
+    static int arr[2];
+    arr[0] = 0;
+    arr[1] = 0;
+    fptr = fopen("../BooksDB/books.txt", "r+");
 
-    for (i = 0; i < 50; i++)
+    while (fread(&b1, sizeof(BOOK), 1, fptr))
     {
-        if (b->available_UID[i] == 0)
+        if (b.isbn == b1.isbn)
+        {
+            printf("\nBooks already exists at position %ld!\n", ftell(fptr));
+            arr[0] = 1;
+            arr[1] = ftell(fptr) - sizeof(BOOK);
             break;
+        }
     }
-    for (j = i; j < b->available_copies; j++)
+
+    fclose(fptr);
+    return arr;
+}
+
+int uid_and_overwrite(BOOK *b, int *searchres)
+{
+    BOOK b2;
+    FILE *uniq;
+    int n = 0;
+    uniq = fopen("../BooksDB/UID.txt", "r+");
+    while (fread(&b2, sizeof(BOOK), 1, uniq))
     {
-        b->available_UID[j] = j + 1 + n;
+        n++;
     }
-    n = n + b->available_copies - i;
-    fseek(uniq, 0, 0);
-    fwrite(&n, sizeof(int), 1, uniq);
-    fclose(uniq);
+    if (searchres[0] == 1)
+    {
+        fseek(uniq, searchres[1], SEEK_SET);
+        fread(&b2, sizeof(BOOK), 1, uniq);
+    }
+    else
+    {
+        char uid[10];
+        fseek(uniq, 0, SEEK_END);
+        for (int i = 1; i <= b->available_copies; i++)
+        {
+            sprintf(uid, "%d.%d", (n + 1), i);
+            strcpy(b->available_UID[i - 1], uid);
+        }
+        fwrite(&b, sizeof(BOOK), 1, uniq);
+    }
+    // int n, i, j;
+    // fread(&n, sizeof(int), 1, uniq);
+
+    // for (i = 0; i < 50; i++)
+    // {
+    //     if (b->available_UID[i] == 0)
+    //         break;
+    // }
+    // for (j = i; j < b->available_copies; j++)
+    // {
+    //     b->available_UID[j] = j + 1 + n;
+    // }
+    // n = n + b->available_copies - i;
+    // fseek(uniq, 0, 0);
+    // fwrite(&n, sizeof(int), 1, uniq);
+    // fclose(uniq);
 }
 
 int add_book()
@@ -46,8 +93,9 @@ int add_book()
         fgets(b1.publisher, 50, stdin);
         b1.publisher[strcspn(b1.publisher, "\n")] = '\0';
 
-        printf("ISBN: ");
-        scanf("%lld", &b1.isbn);
+        printf("ISBN(5-digits): ");
+        fgets(b1.isbn, 14, stdin);
+        b1.title[strcspn(b1.title, "\n")] = '\0';
 
         printf("Number of Copies: ");
         scanf("%d", &b1.available_copies);
@@ -81,39 +129,16 @@ int add_book()
       And, return must be a flag(that says yes or no) and fseek offset
     */
     int *search_result;
-    FILE *booksptr;
-    booksptr = fopen("../BooksDB/books.txt", "r+");
     search_result = searchBook(b1);
     printf("Returned Values: %d, %d\n", search_result[0], search_result[1]);
-    if (search_result[0] == 1)
-    {
-        BOOK b2;
-        fseek(booksptr, search_result[1], SEEK_SET);
-        fread(&b2, sizeof(BOOK), 1, booksptr);
-        b2.available_copies += b1.available_copies;
-        printf("Records Updated.\n");
-        fseek(booksptr, search_result[1], SEEK_SET); // Lines added by pro coder
-        fwrite(&b2, sizeof(BOOK), 1, booksptr);      // Lines added by pro coder
-    }
-    else
-    {
-        b1.issued_copies = 0;
-        generate_uid(&b1); // 1 for new entry, 0 for old entry
-        fseek(booksptr, 0, SEEK_END);
-        fwrite(&b1, sizeof(BOOK), 1, booksptr);
-        printf("New Entry Added.");
-    }
-    fclose(booksptr);
+    uid_and_overwrite(&b1, search_result);
     return 0;
 }
 
-/*
 void main()
 {
-    // system("clear");
+    system("clear");
     add_book();
 
     printf("\nExit\n");
-}
-*/
 }

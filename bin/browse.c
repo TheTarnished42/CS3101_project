@@ -2,46 +2,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
+// #include <unistd.h>
 #include "structs.h"
 // #include "member_menu.c"
 
 int unique_index;
-
-
-int *searchBook(BOOK b)
-{
-    BOOK b1;
-    int counter;
-    static int arr[2];
-    arr[0] = 0;
-    arr[1] = 0;
-    char *file = "../BooksDB/books.txt";
-    FILE *fptr = fopen(file, "r+");
-    printf("In SEARCH!!!!!!!\n\n");
-
-    if (fptr == NULL)
-    {
-        printf("File not Found!");
-        exit(1);
-    }
-
-    else
-    {
-        while (fread(&b1, sizeof(BOOK), 1, fptr))
-        {
-            if(b.isbn == b1.isbn)
-            {
-                printf("\nBooks already exists at position %ld!\n", ftell(fptr));
-                arr[0] = 1;
-                arr[1] = ftell(fptr) - sizeof(BOOK);
-                break;
-            }
-        }
-    }
-    fclose(fptr);
-    return arr;
-}
 
 long *searchByCategories()
 {
@@ -216,7 +181,7 @@ void dataSearch(int choice, char str[100])
 
 int search()
 {
-    FILE *fptr = fopen("../BooksDB/books.txt","r+");
+    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
     BOOK b;
     system("clear");
     printf("\nYou have chosen to search for a book.\n\n");
@@ -237,15 +202,14 @@ int search()
         case 1:
             long *result = searchByCategories();
             printf("\nThe following books are available:\n==============================\n");
-            for(int i = 0; i < unique_index; i++)
+            for (int i = 0; i < unique_index; i++)
             {
                 fseek(fptr, result[i] - sizeof(BOOK), SEEK_SET);
                 fread(&b, sizeof(BOOK), 1, fptr);
-                printf("\n[%d]: %s by %s; ISBN: %lld; No. of copies available: %d", (i+1), b.title, b.author, b.isbn, b.available_copies);
+                printf("\n[%d]: %s by %s; ISBN: %lld; No. of copies available: %d", (i + 1), b.title, b.author, b.isbn, b.available_copies);
             }
             printf("\n\n");
             printf("\n\n==============================\n");
-
 
             printf("\n");
 
