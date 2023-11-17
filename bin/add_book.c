@@ -5,6 +5,7 @@
 // Declaring the book structure.
 typedef struct book
 {
+    char ISBN[6];
     char title[100];
     char author[50];
     char publisher[50];
@@ -209,6 +210,9 @@ int add_book()
     int flag_input = 0;
     do
     { // input
+        printf("Enter ISBN(5-digit code): ");
+        fgets(b1.ISBN, 6, stdin);
+        b1.ISBN[strcspn(b1.ISBN, "\n")] = '\0';
         printf("Enter the Book details:\nTitle: ");
         fgets(b1.title, 100, stdin);
         b1.title[strcspn(b1.title, "\n")] = '\0';
