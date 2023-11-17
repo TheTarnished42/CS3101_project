@@ -162,7 +162,7 @@ void input_categories(BOOK *b)
     printf("#----------------------------------------------------------#\n\n");
 }
 
-int *generate_uid(BOOK *b)
+int *generate_uid(BOOK *b, int *searchres)
 {
     FILE *uniq;
     uniq = fopen("../BooksDB/UID.txt", "r+");
@@ -189,7 +189,7 @@ int *generate_uid(BOOK *b)
     fclose(uniq);
 }
 
-int *dummy(BOOK b) // imitating the search function
+int *search_result(BOOK b) // imitating the search function
 {
 
     char *key = "Hello"; // search-key
@@ -268,23 +268,7 @@ int add_book()
     int *search_result;
     FILE *booksptr;
     booksptr = fopen("../BooksDB/books.txt", "r+");
-    search_result = dummy(b1);
-    if (search_result[0] == 1)
-    {
-        // BOOK b2;
-        // fseek(booksptr, search_result[1], SEEK_SET);
-        // fread(&b2, sizeof(BOOK), 1, booksptr);
-        // b2.available_copies += b1.available_copies;
-        printf("Records Updated.\n");
-    }
-    else
-    {
-        b1.issued_copies = 0;
-        generate_uid(&b1);
-        fseek(booksptr, 0, SEEK_END);
-        fwrite(&b1, sizeof(BOOK), 1, booksptr);
-        printf("New Entry Added.");
-    }
+    search_result = search_book(b1);
     fclose(booksptr);
     return 0;
 }
