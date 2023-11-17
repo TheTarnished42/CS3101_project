@@ -8,7 +8,7 @@
 #include "./bin/admin_menu.c"
 #include "./bin/member_menu.c"
 #include "./bin/browse.c"
-#include "./bin/add_book.c"
+//#include "./bin/add_book.c"
 #include "./bin/remove_book.c"
 #include "./bin/view_current_issue.c"
 #include "./bin/view_lib_log.c"
@@ -109,10 +109,12 @@ void main()
                 switch (*action)
                 {
                 case 1:
-                        browse();
+                        printf("search_book");
+                        //searchBook();
                         break;
                 case 2:
-                        add_book();
+                        //add_book();
+                        printf("add_book");
                         break;
                 case 3:
                         remove_book();
@@ -134,7 +136,8 @@ void main()
                 switch (*action)
                 {
                 case 1:
-                        browse();
+                        printf("search_book");
+                        //searchBook();
                         break;
                 case 2:
                         request_item();
