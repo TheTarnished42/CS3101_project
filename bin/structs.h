@@ -8,6 +8,7 @@ typedef struct book
     char publisher[50];
     int available_copies;
     int issued_copies;
+    int categories[50];
     long long isbn;
     int available_UID[50];
     int issued_UID[50];
@@ -22,5 +23,11 @@ typedef struct member
     char type[2];
 
 } MEMBER;
+
+typedef struct category
+{
+    int no;
+    char name[20];
+} CAT;
 
 #endif //STRUCTS_H

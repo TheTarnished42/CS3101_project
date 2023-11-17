@@ -2,6 +2,148 @@
 #include <stdlib.h>
 #include <string.h>
 #include "structs.h"
+#include "browse.c"
+
+void add_categories()
+{
+    FILE *catptr;
+    CAT c;
+    c.no = 0;
+    catptr = fopen("../BooksDB/Categories.txt", "r+");
+    while (fread(&c, sizeof(c), 1, catptr))
+    {
+    }
+    c.no++;
+    int flag = 0;
+    printf("\nADD NEW CATEGORIES: Enter 0 to QUIT\n\n");
+    while (flag == 0)
+    {
+        int flag2;
+        while (1)
+        {
+            printf("NEW Category Name [%d]: ", (c.no));
+            fgets(c.name, 20, stdin);
+            c.name[strcspn(c.name, "\n")] = '\0';
+            if (c.name[0] == '0')
+            {
+                flag++;
+                break;
+            }
+            while (1)
+            {
+                printf("Confirm New Category[1] or Enter Again[2]: ");
+                scanf("%d", &flag2);
+                getchar();
+                if (flag2 == 1)
+                {
+                    fwrite(&c, sizeof(c), 1, catptr);
+                    c.no++;
+                    printf("Category ADDED.\n\n");
+                    break;
+                }
+                else if (flag2 == 2)
+                    printf("Enter Again.\n");
+                else
+                    printf("Invalid input.\n");
+            }
+        }
+        printf("Exited from ADD NEW CATEGORIES.\n");
+    }
+    fclose(catptr);
+}
+
+void input_categories(BOOK *b)
+{
+
+    printf("#---------------------------------------------------------#\n");
+    FILE *catptr;
+    CAT c;
+    catptr = fopen("../BooksDB/Categories.txt", "r+");
+    printf("--EXISTING CATEGORIES--\n");
+    while (fread(&c, sizeof(c), 1, catptr))
+    {
+        printf("[%d] %s\n", c.no, c.name);
+    }
+    printf("\n--EXISTING CATEGORIES--\n");
+    fclose(catptr);
+    char yn[1];
+    while (1)
+    {
+        printf("\nDo you wish to ADD a NEW CATEGORY to the above list? [y/n]: ");
+        scanf("%s", yn);
+        if (tolower(yn[0]) == 'y')
+        {
+            getchar();
+            add_categories();
+            break;
+        }
+        else if (tolower(yn[0]) == 'n')
+        {
+            break;
+        }
+        else
+            printf("Invalid Input.\n");
+    }
+    if (tolower(yn[0]) == 'y')
+    {
+        catptr = fopen("../BooksDB/Categories.txt", "r+");
+        printf("\n--EXISTING CATEGORIES--\n");
+        while (fread(&c, sizeof(c), 1, catptr))
+        {
+            printf("[%d] %s\n", c.no, c.name);
+        }
+        printf("\n--EXISTING CATEGORIES--\n");
+        fclose(catptr);
+    }
+    printf("\nAssign Category to the book by the corresponding SERIAL NUMBER. \nENTER 0 to STOP assigning.\n");
+
+    while (1)
+    {
+        int counter = 0;
+        int sno[50];
+        while (1)
+        {
+
+            printf("  Assign %dth category of the book(by serial number): ", (counter + 1));
+            scanf("%d", &sno[counter]);
+            if (sno[counter] == 0)
+                break;
+            else
+                counter++;
+        }
+        counter = 0;
+        printf("\nEntered Categories: ");
+        while (sno[counter] != 0)
+        {
+            printf("%d ", sno[counter]);
+            counter++;
+        }
+        counter = 0;
+        printf("\nConfirm Book Categories? [y/n]: ");
+        scanf("%s", yn);
+        if (tolower(yn[0]) == 'y')
+        {
+            while (sno[counter] != 0)
+            {
+                b->categories[counter] = sno[counter];
+                b->categories[counter+1] = 0; //Line added here by Ahan
+                counter++;
+            }
+            printf("Book Categories Confirmed.\n");
+            break;
+        }
+        else if (tolower(yn[0]) == 'n')
+        {
+            printf("Re-enter[1] Exit[0]: ");
+            scanf("%d", &counter);
+            if (counter == 0)
+                break;
+            else
+                printf("Re-ENTRY\n");
+        }
+    }
+    printf("#----------------------------------------------------------#\n\n");
+}
 
 int *generate_uid(BOOK *b)
 {
@@ -47,6 +189,8 @@ int add_book()
 
         printf("ISBN: ");
         scanf("%lld", &b1.isbn);
+
+        input_categories(&b1);
 
         printf("Number of Copies: ");
         scanf("%d", &b1.available_copies);
@@ -105,7 +249,7 @@ int add_book()
     fclose(booksptr);
     return 0;
 }
-/*
+
 void main()
 {
     // system("clear");
@@ -113,4 +257,4 @@ void main()
 
     printf("\nExit\n");
     
-}*/
+}
