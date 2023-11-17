@@ -73,6 +73,99 @@ int uid_and_overwrite(BOOK *b, int *searchres)
     // fclose(uniq);
 }
 
+void input_categories(BOOK *b)
+{
+
+    printf("#---------------------------------------------------------#\n");
+    FILE *catptr;
+    CAT c;
+    catptr = fopen("../BooksDB/Categories.txt", "r+");
+    printf("--EXISTING CATEGORIES--\n");
+    while (fread(&c, sizeof(c), 1, catptr))
+    {
+        printf("[%d] %s\n", c.no, c.name);
+    }
+    printf("\n--EXISTING CATEGORIES--\n");
+    fclose(catptr);
+    char yn[1];
+    while (1)
+    {
+        printf("\nDo you wish to ADD a NEW CATEGORY to the above list? [y/n]: ");
+        scanf("%s", yn);
+        if (tolower(yn[0]) == 'y')
+        {
+            getchar();
+            add_categories();
+            break;
+        }
+        else if (tolower(yn[0]) == 'n')
+        {
+            break;
+        }
+        else
+            printf("Invalid Input.\n");
+    }
+    if (tolower(yn[0]) == 'y')
+    {
+        catptr = fopen("../BooksDB/Categories.txt", "r+");
+        printf("\n--EXISTING CATEGORIES--\n");
+        while (fread(&c, sizeof(c), 1, catptr))
+        {
+            printf("[%d] %s\n", c.no, c.name);
+        }
+        printf("\n--EXISTING CATEGORIES--\n");
+        fclose(catptr);
+    }
+    printf("\nAssign Category to the book by the corresponding SERIAL NUMBER. \nENTER 0 to STOP assigning.\n");
+
+    while (1)
+    {
+        int counter = 0;
+        int sno[50];
+        while (1)
+        {
+
+            printf("  Assign %dth category of the book(by serial number): ", (counter + 1));
+            scanf("%d", &sno[counter]);
+            if (sno[counter] == 0)
+                break;
+            else
+                counter++;
+        }
+        counter = 0;
+        printf("\nEntered Categories: ");
+        while (sno[counter] != 0)
+        {
+            printf("%d ", sno[counter]);
+            counter++;
+        }
+        counter = 0;
+        printf("\nConfirm Book Categories? [y/n]: ");
+        scanf("%s", yn);
+        if (tolower(yn[0]) == 'y')
+        {
+            while (sno[counter] != 0)
+            {
+                b->categories[counter] = sno[counter];
+                b->categories[counter + 1] = 0; // Line added here by Ahan
+                counter++;
+            }
+            printf("Book Categories Confirmed.\n");
+            break;
+        }
+        else if (tolower(yn[0]) == 'n')
+        {
+            printf("Re-enter[1] Exit[0]: ");
+            scanf("%d", &counter);
+            if (counter == 0)
+                break;
+            else
+                printf("Re-ENTRY\n");
+        }
+    }
+    printf("#----------------------------------------------------------#\n\n");
+}
+
 int add_book()
 {
     printf("You are in Add Book.\n");
