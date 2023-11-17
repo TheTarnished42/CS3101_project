@@ -8,7 +8,6 @@
 
 int unique_index;
 
-
 int *searchBook(BOOK b)
 {
     BOOK b1;
@@ -30,7 +29,7 @@ int *searchBook(BOOK b)
     {
         while (fread(&b1, sizeof(BOOK), 1, fptr))
         {
-            if(b.isbn == b1.isbn)
+            if (b.isbn == b1.isbn)
             {
                 printf("\nBooks already exists at position %ld!\n", ftell(fptr));
                 arr[0] = 1;
@@ -214,9 +213,9 @@ void dataSearch(int choice, char str[100])
     }
 }
 
-int search()
+long search()
 {
-    FILE *fptr = fopen("../BooksDB/books.txt","r+");
+    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
     BOOK b;
     system("clear");
     printf("\nYou have chosen to search for a book.\n\n");
@@ -225,6 +224,7 @@ int search()
     printf("Enter '3' to search by name of the author(s)\n");
     printf("Enter '4' to search by ISBN code of the book\n");
     printf("Enter '5' to go back to menu\n");
+    int i;
 
     int choice;
     while (1)
@@ -236,18 +236,51 @@ int search()
         {
         case 1:
             long *result = searchByCategories();
-            printf("\nThe following books are available:\n==============================\n");
-            for(int i = 0; i < unique_index; i++)
+            if(result == NULL)
             {
-                fseek(fptr, result[i] - sizeof(BOOK), SEEK_SET);
-                fread(&b, sizeof(BOOK), 1, fptr);
-                printf("\n[%d]: %s by %s; ISBN: %lld; No. of copies available: %d", (i+1), b.title, b.author, b.isbn, b.available_copies);
+                printf("Error in search\n");
+                return -1;
             }
-            printf("\n\n");
-            printf("\n\n==============================\n");
+            while (1)
+            {
+                printf("\nThe following books are available:\n==============================\n");
 
+                for (i = 0; i < unique_index; i++)
+                {
+                    fseek(fptr, result[i] - sizeof(BOOK), SEEK_SET);
+                    fread(&b, sizeof(BOOK), 1, fptr);
+                    printf("\n[%d]: %s by %s; ISBN: %lld; No. of copies available: %d", (i + 1), b.title, b.author, b.isbn, b.available_copies);
+                }
+                printf("\n\n");
+                printf("\n\n==============================\n");
+                int ch;
 
-            printf("\n");
+                while (1)
+                {
+                    printf("\nEnter the corresponding number of the book you want to issue: ");
+                    scanf("%d", &ch);
+                    if (ch < 0 || ch > result[i])
+                    {
+                        printf("Invalid Entry! Retry...");
+                        continue;
+                    }
+                    break;
+                }
+                printf("result: %lu", result[ch-1]-sizeof(BOOK));
+                printf("You have chosen to issue this book:\n\n");
+                fseek(fptr, result[ch - 1]-sizeof(BOOK), SEEK_SET);
+                fread(&b, sizeof(BOOK), 1, fptr);
+                printf("%s by %s; ISBN: %lld; No. of copies available: %d\n", b.title, b.author, b.isbn, b.available_copies);
+                printf("Enter [1] to confirm and [0] to reselect: ");
+                int cc;
+                scanf("%d", &cc);
+                if (cc == 1)
+                {
+                    return ftell(fptr) - sizeof(BOOK);
+                    break;
+                }
+                continue;
+            }
 
             return 1;
         case 2:
