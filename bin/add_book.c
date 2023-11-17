@@ -107,6 +107,7 @@ int add_book()
     return 0;
 }
 
+/*
 void main()
 {
     // system("clear");
@@ -114,3 +115,4 @@ void main()
 
     printf("\nExit\n");
 }
+*/
