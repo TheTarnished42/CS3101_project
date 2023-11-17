@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 typedef struct 
 {
@@ -16,55 +17,52 @@ typedef struct student //Defining the user struct
     DATE date_of_issue[3];
 } STUDENT;
 
-DATE date(int day, int month, int year) {
-    DATE specific_date;
-    if ((day > 0) && (day <= 31) && (month > 0) && (month <= 12)) 
-    {
-        specific_date.day = day;
-        specific_date.month = month;
-        specific_date.year = year;
-        return specific_date;
-    } 
-    else 
-    {
-        specific_date.day = specific_date.month = specific_date.year = 0;
-        return specific_date;
-    }
+
+DATE get_current_date() 
+{
+    DATE current_date;
+
+    time_t t;
+    struct tm *tm_info;
+
+    time(&t);
+    tm_info = localtime(&t);
+
+    current_date.day = tm_info->tm_mday;
+    current_date.month = tm_info->tm_mon + 1;  // Months are 0-based in tm struct
+    current_date.year = tm_info->tm_year + 1900;  // Years since 1900 in tm struct
+
+    return current_date;
 }
 
-
-void submit_book(char *s_id)
+void update_item(char *s_id, char *title, char *bkid)
 {
-    char rbid[5]; 
-    char *null = "";
-    printf("You are in submit book\n");
-    printf("Enter the ID of the book you want to return: ");
-    scanf("%s", rbid);
-
-    int i;
+    int i,j, temp1, count; //Defining some useful variables
+    //int day = 30, month = 11, year = 2023;
+    DATE dt = get_current_date();
     const char *filename = "hello.txt"; //txt file which has stored student struct
     FILE *fptr; //defines file pointer
-    STUDENT stud; //defines student struct 
-    fptr = fopen(filename, "r+"); //opens file name
+    STUDENT st; //defines struct in update_item
 
+    fptr = fopen(filename, "r+"); //opens file name
     if (fptr == NULL)
     {
         printf("Error opening file.\n");
     }
-    while (fread(&stud, sizeof(STUDENT), 1, fptr)) //Reads file
+    while (fread(&st, sizeof(STUDENT), 1, fptr)) //Reads file
     {
-        if (strcmp(stud.student_id, s_id) == 0) //Finds out the required student id
+        if (strcmp(st.student_id, s_id) == 0) //Finds out the required student id
         {
             for (i=0; i<3; i++)
             {
-                if (strcmp(stud.issued_id[i], rbid) == 0)
+                if (st.issued_id[i][0] == '\0') //Checks which array item is empty in stu.issued_id
                 {
-                    strcpy(stud.issued_id[i], null); //Removes the issue id of the book to submit from issued_id array
-                    strcpy(stud.book_title[i], null); //Removes the book title of the book to submit from book_title array
-                    stud.date_of_issue[i] = date(0, 0, 0); //Removes the date of issue of the book to submit from date_of_issue array
+                    strcpy(st.issued_id[i], bkid);//Updates currently issued book id
+                    strcpy(st.book_title[i], title);//Updates currently issued book title
+                    st.date_of_issue[i] = dt;
                     fseek(fptr, -sizeof(STUDENT), 1);
-                    fwrite(&stud, sizeof(STUDENT), 1, fptr); //Writes the updated struct to hello.txt    
-                    break;  
+                    fwrite(&st, sizeof(STUDENT), 1, fptr); //Writes the updated struct to hello.txt
+                    break;
                 }
             }
             break;
@@ -73,7 +71,9 @@ void submit_book(char *s_id)
     fclose(fptr);
 }
 
-void sub_read(const char *filename) //To print the student issue struct info so that file can be read and entries can be checked
+
+
+void up_read(const char *filename) //To print the student issue struct info so that file can be read and entries can be checked
 {
     FILE *fptr;
     STUDENT stu;
@@ -110,10 +110,14 @@ void sub_read(const char *filename) //To print the student issue struct info so 
 }
 
 
+
+
 void main() //Checks if my above code makes sense
 {
     char filename[] = "hello.txt";
+    char *t = "Aishi's Galaxy";
     char *id = "S456";
-    submit_book(id);
-    sub_read(filename);
+    char *bid = "B092";
+    update_item(id, t, bid);
+    up_read(filename);
 }
