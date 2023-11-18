@@ -3,7 +3,7 @@
 
 #define MAX_LINE_LENGTH 100
 
-// Function to display log entries
+
 void displayLogEntries(const char *filename, int startLine, int numLines) {
     FILE *file = fopen(filename, "r");
 
@@ -36,14 +36,14 @@ void displayLogEntries(const char *filename, int startLine, int numLines) {
     fclose(file);
 }
 
-int main() {
+void view_lib_log() {
     int startLine = 0;
     int numLines = 10;
     char response;
 
     do {
         // Display log entries
-        displayLogEntries("/home/nivasmummadi/CS3101_project/BooksDB/log.txt", startLine, numLines);
+        displayLogEntries("./Log/log.txt", startLine, numLines);
 
         // Ask user if they want to see the next set of entries
         printf("Do you want to see the next %d entries? (y/n): ", numLines);
@@ -54,6 +54,6 @@ int main() {
 
     } while (response == 'y' || response == 'Y');
 
-    return 0;
+    
 }
 

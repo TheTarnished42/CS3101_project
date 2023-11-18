@@ -8,8 +8,8 @@ void view_all_users()
     
     // printing all the books in the library
     MEMBER b;
-    printf("USER-ID\t\tFIRST NAME\tLAST NAME\t\tPASSWORD\t\tDESIGNATION\n");
-    printf("=======\t\t==========\t=========\t\t========\t\t===========\n");
+    printf("USER-ID\t\tFIRST NAME\t LAST NAME\t  PASSWORD\tDESIGNATION\n");
+    printf("=======\t\t==========\t =========\t  ========\t===========\n");
 
     char desig[20];  // Declare desig as a character array
 
@@ -31,7 +31,7 @@ void view_all_users()
                 break;
         }
 
-        printf("%8s\t\t%10s\t%10s\t\t%10s\t\t%10s\n", b.m_id, b.first_name, b.last_name, b.m_psswd, desig);
+        printf("%-9s\t%10s\t%10s\t%10s\t%11s\n", b.m_id, b.first_name, b.last_name, b.m_psswd, desig);
     }
     printf("\nPress Enter to continue.\n");
     getchar();

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "structs.h"
 #include <ctype.h>
-#include "../bin/structs.h"
 // #include "./browse.c"
 
 int *searchBook(char *isbn)
@@ -223,8 +223,7 @@ void input_categories(BOOK *b)
 
 int add_book()
 {
-    system("clear");
-    printf("You are in ADD BOOK.\n");
+    printf("You are in Add Book.\n");
     BOOK b1;
     // b1 is the input structure.
     int flag_input = 0;
@@ -307,17 +306,16 @@ int add_book()
     uid_and_overwrite(&b1, search_result);
     return 0;
 }
-
-
-    /*
+/*
 void main()
 {
-    add_book();
-    FILE *fptr;
-    BOOK b1;
-    fptr = fopen("../BooksDB/books.txt", "r+");
-    fread(&b1, sizeof(BOOK), 1, fptr);
-    fread(&b1, sizeof(BOOK), 1, fptr);
-    printf("%s", b1.available_UID[6]);
-    printf("\nExit\n");
+    // add_book();
+    //  FILE *fptr;
+    //  BOOK b1;
+    //  fptr = fopen("../BooksDB/books.txt", "r+");
+    //  fread(&b1, sizeof(BOOK), 1, fptr);
+    //  // fread(&b1, sizeof(BOOK), 1, fptr);
+    //  printf("%s\n", b1.title);
+    //  printf("%d", b1.available_copies);
+    // printf("\nExit\n");
 }*/

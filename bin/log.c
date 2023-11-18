@@ -12,8 +12,8 @@ void getTimestamp(char *timestamp) {
 }
 
 // Function to write data to file with headings
-void writeToLogFile(const char *filename, const char *userid, const char *bookid, const char *action) {
-    FILE *file = fopen(filename, "a"); // Open file in append mode
+void writeToLogFile(char *userid, int action) {
+    FILE *file = fopen("./Log/log.txt", "a"); // Open file in append mode
 
     if (file == NULL) {
         perror("Error opening file");
@@ -26,35 +26,11 @@ void writeToLogFile(const char *filename, const char *userid, const char *bookid
     // Write headings if the file is empty
     fseek(file, 0, SEEK_END);
     if (ftell(file) == 0) {
-        fprintf(file, "\tTimestamp\t\tUserID\t\tBookID\t\tAction\n");
+        fprintf(file, "\tTimestamp\tUserID\tAction\n");
     }
 
     // Write data to file with two-tab separation
-    fprintf(file, "%s\t\t%s\t\t%s\t\t%s\n", timestamp,		userid,		bookid, 	action);
+    fprintf(file, "%s\t%s\t%d\n", timestamp,		userid, 	action);
 
     fclose(file);
 }
-
-int main() {
-    char userid[50];
-    char bookid[50];
-    char action[10];
-
-    // Get user input
-    printf("Enter UserID: ");
-    scanf("%s", userid);
-
-    printf("Enter BookID: ");
-    scanf("%s", bookid);
-
-    printf("Enter Action (add, issue, remove, submit): ");
-    scanf("%s", action);
-
-    // Write data to file
-    writeToLogFile("/home/nivasmummadi/CS3101_project/BooksDB/log.txt", userid, bookid, action);
-
-    printf("Data written to log.txt successfully.\n");
-
-    return 0;
-}
-

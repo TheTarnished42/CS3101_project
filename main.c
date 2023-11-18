@@ -10,12 +10,15 @@
 #include "./bin/browse.c"
 #include "./bin/add_book.c"
 #include "./bin/remove_book.c"
-//#include "./bin/view_current_issue.c"
+#include "./bin/view_current_issue.c"
 //#include "./bin/view_lib_log.c"
 #include "./bin/add_user.c"
 #include "./bin/request_issue.c"
 #include "./bin/view_catalogue.c"
 #include "./bin/view_all_user.c"
+#include "./bin/view_lib_log.c"
+#include "./bin/log.c"
+//#include <string.h>
 
 //#include "./bin/submit_book.c"
 
@@ -116,31 +119,25 @@ do{
                 switch (*action)
                 {
                 case 1:
-                        printf("search_book");
-                        //searchBook();
-                        break;
-                case 2:
                         add_book();
                         break;
-                case 3:
+                case 2:
                         remove_book();
-                        printf("remove_book");
+                        break;
+                case 3:
+                        view_current_issue();
                         break;
                 case 4:
-                        printf("current issue view");
-                        //view_current_issue();
+                        //printf("view library log");
+                        view_lib_log();
                         break;
                 case 5:
-                        printf("view library log");
-                        //view_lib_log();
-                        break;
-                case 6:
                         add_user();
                         break;
-                case 7:
+                case 6:
                         view_catalogue();
                         break;
-                case 8:
+                case 7:
                         view_all_users();
                         break;
                 case 0:
@@ -161,13 +158,11 @@ do{
                         if (pos!=-1)
                         {
                             printf("Position of book is %ld",pos);
-                            break;
+                            issue_book(userid, *usertype, pos);
                         }
-                        else
-                        {
                             break;
-                        }
                 case 2:
+                        getchar();
                         submit_book(userid);
                         break;
                 case 3: 
@@ -186,9 +181,15 @@ do{
                 {
                 case 1:
                         long pos=search();
-                        //searchBook();
+                        if (pos!=-1)
+                        {
+                            printf("Position of book is %ld",pos);
+                            issue_book(userid, *usertype, pos);
+                        }
                         break;
                 case 2:
+                        printf("submit_book");
+                        getchar();
                         submit_book(userid);
                         break;
                 case 3: 
@@ -203,6 +204,7 @@ do{
         }
         }
         flag_1=1;
+        writeToLogFile(userid, *action);
 }while(flag_3==1);
 }while(1);
 }

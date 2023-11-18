@@ -1,7 +1,8 @@
 /*
 This code displays the login menu when you log in to the library
 */
-#include "../bin/structs.h"
+#include<stdio.h>
+#include "./structs.h"
 #include <string.h>
 
 void login_menu(char *usertype, char *uid, char *password, char *username)
@@ -24,10 +25,9 @@ void login_menu(char *usertype, char *uid, char *password, char *username)
 
 // insert the checking command to see wether the given password is correct or not
 // decide the usertype accordingly and update accordingly give -1 for invalid combination
-/*
-    printf("Enter 1 for Admin and 2 for Member: ");
-    scanf("%s", usertype);
-*/
+    // printf("Enter 1 for Admin and 2 for Member: ");
+    // scanf("%s", usertype);
+
 
     FILE *file=fopen("./BooksDB/user_id.txt", "r+");
     MEMBER m;
