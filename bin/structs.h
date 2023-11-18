@@ -1,6 +1,6 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
-
+#include <time.h>
 typedef struct book
 {
     char title[100];
@@ -29,5 +29,14 @@ typedef struct category
     int no;
     char name[20];
 } CAT;
+
+typedef struct issue
+{
+    char userid[10];
+    int copies_issued;
+    char issued_UID[10][20];
+    char issued_isbn[10][14];
+    time_t doi[10];
+} ISSUE;
 
 #endif // STRUCTS_H

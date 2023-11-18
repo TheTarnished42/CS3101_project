@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "structs.h"
+#include <ctype.h>
 // #include "./browse.c"
 
-int *searchBook(BOOK b)
+int *searchBook(char *isbn)
 {
     printf("In searchbook\n\n");
     FILE *fptr;
@@ -16,7 +17,7 @@ int *searchBook(BOOK b)
 
     while (fread(&b1, sizeof(BOOK), 1, fptr))
     {
-        if (b.isbn == b1.isbn)
+        if (strcmp(isbn, b1.isbn) == 0)
         {
             printf("\nBooks already exists at position %ld!\n", ftell(fptr));
             arr[0] = 1;
@@ -28,24 +29,90 @@ int *searchBook(BOOK b)
     fclose(fptr);
     return arr;
 }
+void add_categories()
+{
+    FILE *catptr;
+    CAT c;
+    c.no = 0;
+    catptr = fopen("../BooksDB/Categories.txt", "r+");
+    while (fread(&c, sizeof(c), 1, catptr))
+    {
+    }
+    c.no++;
+    int flag = 0;
+    printf("\nADD NEW CATEGORIES: Enter 0 to QUIT\n\n");
+
+    while (flag == 0)
+    {
+        int flag2;
+        while (1)
+        {
+            printf("NEW Category Name [%d]: ", (c.no));
+            fgets(c.name, 20, stdin);
+            c.name[strcspn(c.name, "\n")] = '\0';
+            if (c.name[0] == '0')
+            {
+                flag++;
+                break;
+            }
+            while (1)
+            {
+                printf("Confirm New Category[1] or Enter Again[2]: ");
+                scanf("%d", &flag2);
+                getchar();
+                if (flag2 == 1)
+                {
+                    fwrite(&c, sizeof(c), 1, catptr);
+                    c.no++;
+                    printf("Category ADDED.\n\n");
+                    break;
+                }
+                else if (flag2 == 2)
+                    printf("Enter Again.\n");
+                else
+                    printf("Invalid input.\n");
+            }
+        }
+        printf("Exited from ADD NEW CATEGORIES.\n");
+    }
+    fclose(catptr);
+}
 
 int uid_and_overwrite(BOOK *b, int *searchres)
 {
     BOOK b2;
     FILE *uniq;
     int n = 0;
-    uniq = fopen("../BooksDB/UID.txt", "r+");
+    uniq = fopen("../BooksDB/books.txt", "r+");
     while (fread(&b2, sizeof(BOOK), 1, uniq))
     {
         n++;
     }
     if (searchres[0] == 1)
     {
+        int n2 = searchres[1] / sizeof(BOOK) + 1;
         fseek(uniq, searchres[1], SEEK_SET);
         fread(&b2, sizeof(BOOK), 1, uniq);
+        char uid[10];
+        int i2 = 0;
+        int total_copies = b2.available_copies + b2.issued_copies;
+        while (strcmp(b2.available_UID[i2], "\0") != 0)
+        {
+            i2++;
+        }
+        for (int i = 0; i < b->available_copies; i++)
+        {
+            sprintf(uid, "%d.%d", n2, (i + 1 + total_copies));
+            strcpy(b2.available_UID[i2 + i], uid);
+        }
+        b2.available_copies += b->available_copies;
+        // strcpy(b2.available_UID[total_copies + b->available_copies], '\0');
+        fseek(uniq, -sizeof(BOOK), SEEK_CUR);
+        fwrite(&b2, sizeof(BOOK), 1, uniq);
     }
     else
     {
+        printf("New Book.\n");
         char uid[10];
         fseek(uniq, 0, SEEK_END);
         for (int i = 1; i <= b->available_copies; i++)
@@ -53,24 +120,12 @@ int uid_and_overwrite(BOOK *b, int *searchres)
             sprintf(uid, "%d.%d", (n + 1), i);
             strcpy(b->available_UID[i - 1], uid);
         }
-        fwrite(&b, sizeof(BOOK), 1, uniq);
+        // strcpy(b->available_UID[b->available_copies], "\0");
+        b->issued_copies = 0;
+        // strcpy(b->issued_UID[0], '\0');
+        fwrite(b, sizeof(BOOK), 1, uniq);
     }
-    // int n, i, j;
-    // fread(&n, sizeof(int), 1, uniq);
-
-    // for (i = 0; i < 50; i++)
-    // {
-    //     if (b->available_UID[i] == 0)
-    //         break;
-    // }
-    // for (j = i; j < b->available_copies; j++)
-    // {
-    //     b->available_UID[j] = j + 1 + n;
-    // }
-    // n = n + b->available_copies - i;
-    // fseek(uniq, 0, 0);
-    // fwrite(&n, sizeof(int), 1, uniq);
-    // fclose(uniq);
+    fclose(uniq);
 }
 
 void input_categories(BOOK *b)
@@ -172,8 +227,35 @@ int add_book()
     BOOK b1;
     // b1 is the input structure.
     int flag_input = 0;
+    int *search_result;
     do
     { // input
+        printf("ISBN(5-digits): ");
+        fgets(b1.isbn, 14, stdin);
+        b1.isbn[strcspn(b1.isbn, "\n")] = '\0';
+
+        search_result = searchBook(b1.isbn);
+        if (search_result[0] == 1)
+        {
+            char yn;
+            printf("Book Already Exists!");
+            // display_book();
+            printf("Is this the Book whose stock is to be increased? [y/n]: ");
+            scanf("%c", &yn);
+            getchar();
+            if (tolower(yn) == 'y')
+            {
+                printf("Number of Copies: ");
+                scanf("%d", &b1.available_copies);
+                getchar();
+                break;
+            }
+            else
+            {
+                printf("Enter ISBN again.\n");
+                continue;
+            }
+        }
         printf("Enter the Book details:\nTitle: ");
         fgets(b1.title, 100, stdin);
         b1.title[strcspn(b1.title, "\n")] = '\0';
@@ -186,9 +268,7 @@ int add_book()
         fgets(b1.publisher, 50, stdin);
         b1.publisher[strcspn(b1.publisher, "\n")] = '\0';
 
-        printf("ISBN(5-digits): ");
-        fgets(b1.isbn, 14, stdin);
-        b1.title[strcspn(b1.title, "\n")] = '\0';
+        input_categories(&b1);
 
         printf("Number of Copies: ");
         scanf("%d", &b1.available_copies);
@@ -221,8 +301,7 @@ int add_book()
     /*IMPORTANT: We must call a search fxn from browse.c to check if the title already exits.
       And, return must be a flag(that says yes or no) and fseek offset
     */
-    int *search_result;
-    search_result = searchBook(b1);
+
     printf("Returned Values: %d, %d\n", search_result[0], search_result[1]);
     uid_and_overwrite(&b1, search_result);
     return 0;
@@ -230,8 +309,12 @@ int add_book()
 
 void main()
 {
-    system("clear");
-    add_book();
-
+    // add_book();
+    FILE *fptr;
+    BOOK b1;
+    fptr = fopen("../BooksDB/books.txt", "r+");
+    fread(&b1, sizeof(BOOK), 1, fptr);
+    fread(&b1, sizeof(BOOK), 1, fptr);
+    printf("%s", b1.available_UID[6]);
     printf("\nExit\n");
 }
