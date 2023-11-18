@@ -37,6 +37,7 @@ typedef struct issue
     char issued_UID[10][20];
     char issued_isbn[10][14];
     time_t doi[10];
+    int issue_period[10];
 } ISSUE;
 
 #endif // STRUCTS_H

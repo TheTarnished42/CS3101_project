@@ -13,8 +13,9 @@ int issue_book(char *userid, char utype, long pos) // updatesbooks.txt and issue
     bksfile = fopen("../BooksDB/books.txt", "r+");
     fseek(bksfile, pos, SEEK_SET);
     fread(&b, sizeof(BOOK), 1, bksfile);
-
+    int issperiod;
     int flag = 0;
+
     if (b.available_copies == 0)
     {
         printf("No copies");
@@ -24,6 +25,26 @@ int issue_book(char *userid, char utype, long pos) // updatesbooks.txt and issue
     {
         printf("Cant be issued to student, less than 3copies");
         return 0;
+    }
+    else if (b.available_copies <= 3 && utype != 'u')
+    {
+        issperiod = 7;
+        printf("This book's issue period is 7 days.\n");
+    }
+    else if (b.available_copies > 3 && b.available_copies <= 6)
+    {
+        issperiod = 15;
+        printf("This book's issue period is 15 days.\n");
+    }
+    else if (b.available_copies > 6 && b.available_copies <= 10)
+    {
+        issperiod = 25;
+        printf("This book's issue period is 25 days.\n");
+    }
+    else if (b.available_copies > 10)
+    {
+        issperiod = 30;
+        printf("This book's issue period is 30 days.\n");
     }
 
     while (fread(&issue, sizeof(ISSUE), 1, issfile))
@@ -44,6 +65,8 @@ int issue_book(char *userid, char utype, long pos) // updatesbooks.txt and issue
         strcpy(issue.issued_UID[issue.copies_issued], b.available_UID[b.available_copies - 1]);
         time(&issue.doi[issue.copies_issued]);
         strcpy(issue.issued_isbn[issue.copies_issued], b.isbn);
+        issue.issue_period[issue.copies_issued] = issperiod;
+        issue.issue_period[issue.copies_issued + 1] = 0;
         // issue.doi[issue.copies_issued] += 1653;
         issue.copies_issued++;
         fwrite(&issue, sizeof(ISSUE), 1, issfile);
@@ -59,6 +82,8 @@ int issue_book(char *userid, char utype, long pos) // updatesbooks.txt and issue
         strcpy(issue.issued_UID[issue.copies_issued], b.available_UID[b.available_copies - 1]);
         time(&issue.doi[issue.copies_issued]);
         strcpy(issue.issued_isbn[issue.copies_issued], b.isbn);
+        issue.issue_period[issue.copies_issued] = issperiod;
+        issue.issue_period[issue.copies_issued + 1] = 0;
         // issue.doi[issue.copies_issued] += 1653;
         issue.copies_issued++;
         fseek(issfile, -sizeof(ISSUE), SEEK_CUR);
@@ -125,9 +150,10 @@ int submit_book(char *userid)
     double period_s = difftime(now, issue.doi[index]);
     double period_d = period_s / 86400;
     printf("You had the book for %fs that is, %f days\n", period_s, period_d);
-    if (period_d >= 1)
+    printf("Issue Period was %d days.\n", issue.issue_period[index]);
+    if (period_d >= issue.issue_period[index])
     {
-        printf("Fine to be paid %d:Rs ", (int)(period_d - 1) * 10);
+        printf("Fine to be paid :Rs %f \n", (issue.issue_period[index] - period_d) * 10);
     }
     char uid[20], posisbn[14];
     strcpy(uid, issue.issued_UID[index]);
@@ -136,6 +162,7 @@ int submit_book(char *userid)
     {
         strcpy(issue.issued_UID[i], issue.issued_UID[i + 1]);
         strcpy(issue.issued_isbn[i], issue.issued_isbn[i + 1]);
+        issue.issue_period[i] = issue.issue_period[i + 1];
         issue.doi[i] = issue.doi[i + 1];
     }
     // printf("flag1");
@@ -178,11 +205,11 @@ void main()
 {
     // issue_book("av21ms201", 'u', sizeof(BOOK));
     // submit_book("av21ms201");
-    FILE *p;
-    ISSUE is;
-    p = fopen("../Issues/issues.txt", "r");
-    fread(&is, sizeof(ISSUE), 1, p);
-    // fread(&is, sizeof(ISSUE), 1, p);
-    printf("%d\n", is.copies_issued);
+    //  FILE *p;
+    //  ISSUE is;
+    //  p = fopen("../Issues/issues.txt", "r");
+    //  fread(&is, sizeof(ISSUE), 1, p);
+    //  // fread(&is, sizeof(ISSUE), 1, p);
+    //  printf("%d\n", is.copies_issued);
     printf("Exit\n");
 }
