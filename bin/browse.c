@@ -11,18 +11,16 @@
 
 int unique_index;
 
+/*
+searchByCategories() will take input from the user as to what
+categories he/she wants to enter and it returns an array of long integers containing
+the positions of the BOOK structs in the file "books.txt"
+*/
 long *searchByCategories()
 {
     FILE *catptr = fopen("../BooksDB/Categories.txt", "r+");
     CAT c;
     system("clear");
-    // printf("----------EXISTING CATEGORIES----------\n\n");
-    // while (fread(&c, sizeof(c), 1, catptr))
-    // {
-    //     printf("[%d] %s\n", c.no, c.name);
-    // }
-
-    // printf("\n\n----------xxxxxxxxxx----------\n\n");
 
     int cat[50];
     int count = 0;
@@ -173,6 +171,10 @@ long *searchByCategories()
 
     return arr_ftells;
 }
+/*
+compare(char**, char**) takes as input an array of words and
+returns the number of words common
+*/
 int compare(char **str1, char **str2)
 {
     int n, m;
@@ -195,6 +197,11 @@ int compare(char **str1, char **str2)
     return count;
 }
 
+/*
+tokenize(char[]) takes a string as input and returns a double-pointer
+thereby tokenizing the entire string into an array of words separated
+by white space
+*/
 char **tokenize(char str[100])
 {
     for (int i = 0; i < strlen(str); i++)
@@ -219,15 +226,16 @@ char **tokenize(char str[100])
     }
 
     words[n] = NULL;
-    /*
-        for (int i = 0; i < n; i++)
-        {
-            printf("%s,", words[i]);
-        }
-        printf("\n");*/
     return words;
 }
+/*
+searchByTitle() will take input from the user as to what
+title he/she wants to enter and it returns an array of long integers containing
+the positions of the BOOK structs in the file "books.txt"
 
+This array is sorted such that it allows free text search by the user in the title
+of the book
+*/
 long *searchByTitle(char str[100])
 {
 
@@ -411,6 +419,71 @@ long *searchByPublisher(char str[100])
     return ftell_arr;
 }
 
+long *searchByFreeText(char str[100])
+{
+    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
+    BOOK b;
+
+    int arr[100];
+    long *ftell_arr = (long *)malloc(100 * sizeof(long));
+
+    int result = 0;
+    int index = 0;
+    char **words1;
+    char **words2;
+    words1 = tokenize(str);
+    while (fread(&b, sizeof(BOOK), 1, fptr))
+    {
+        char str2[100];
+        strcpy(str2, b.title);
+        strcat(str2, " ");
+        strcat(str2, b.author);
+        strcat(str2, " ");
+        strcat(str2, b.publisher);
+        words2 = tokenize(str2);
+        result = compare(words1, words2);
+        if (result > 0)
+        {
+            arr[index] = result;
+            ftell_arr[index] = ftell(fptr);
+            index++;
+        }
+
+        for (int i = 0; words2[i] != NULL; i++)
+        {
+            free(words2[i]);
+        }
+        free(words2);
+    }
+    arr[index] = 0;
+    ftell_arr[index] = -1;
+    index++;
+
+    for (int i = 0; words1[i] != NULL; i++)
+    {
+        free(words1[i]);
+    }
+    free(words1);
+
+    for (int i = 0; i < index - 1; i++)
+    {
+        for (int j = 0; j < index - i - 1; j++)
+        {
+            if (arr[j] < arr[j + 1])
+            {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+
+                long tempp = ftell_arr[j];
+                ftell_arr[j] = ftell_arr[j + 1];
+                ftell_arr[j + 1] = tempp;
+            }
+        }
+    }
+    unique_index = index;
+    return ftell_arr;
+}
 long search()
 {
     FILE *fptr = fopen("../BooksDB/books.txt", "r+");
@@ -424,7 +497,8 @@ user_entered_zero:
     printf("Enter '3' to search by name of the author(s)\n");
     printf("Enter '4' to search by name of the publisher(s)\n");
     printf("Enter '5' to search by ISBN code of the book\n");
-    printf("Enter '6' to go back to menu\n");
+    printf("Enter '6' for free text search\n");
+    printf("Enter '7' to go back to menu\n");
     int i;
     int page = 1;
     int totalBooks = 0;
@@ -528,6 +602,7 @@ user_entered_zero:
 
                 if (cc == 1)
                 {
+
                     return ftell(fptr) - sizeof(BOOK);
                 }
                 else if (cc == 0)
@@ -649,6 +724,7 @@ user_entered_zero:
                 scanf("%d", &cc);
                 if (cc == 1)
                 {
+
                     return ftell(fptr) - sizeof(BOOK);
                     break;
                 }
@@ -751,6 +827,7 @@ user_entered_zero:
                 scanf("%d", &cc);
                 if (cc == 1)
                 {
+
                     return ftell(fptr) - sizeof(BOOK);
                     break;
                 }
@@ -789,12 +866,11 @@ user_entered_zero:
                     printf("\n[%d]: %s by %s; ISBN: %s; No. of copies available: %d", (i + 1), b.title, b.author, b.isbn, b.available_copies);
                 }
 
-
                 printf("\n\n");
                 printf("\n\n==============================\n");
                 int ch;
                 char ch2;
-                four:
+            four:
                 printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
                 scanf(" %c", &ch2);
                 getchar();
@@ -916,6 +992,111 @@ user_entered_zero:
             }
 
         case 6:
+            char query[100];
+        reenter_query:
+            printf("\nEnter your query: ");
+            fgets(query, 100, stdin);
+            query[strcspn(query, "\n")] = '\0';
+            long *arr4;
+            arr4 = searchByFreeText(query);
+            fseek(fptr, 0, SEEK_SET);
+            page = 1;
+            totalBooks = 0;
+
+        pageupdate_6:
+            while (1)
+            {
+                int startIdx = (page - 1) * BOOKS_PER_PAGE;
+                int endIdx = startIdx + BOOKS_PER_PAGE;
+
+                printf("\nThe following books available (displayed in decreasing order of similarity to your search query):5\n==============================\n");
+
+                for (i = startIdx; i < endIdx && i < unique_index; i++)
+                {
+                    if (arr4[i] == -1)
+                    {
+                        break;
+                    }
+                    fseek(fptr, arr4[i] - sizeof(BOOK), SEEK_SET);
+                    fread(&b, sizeof(BOOK), 1, fptr);
+                    totalBooks++;
+                    printf("\n[%d]: %s by %s; ISBN: %s; No. of copies available: %d", (i + 1), b.title, b.author, b.isbn, b.available_copies);
+                }
+
+                printf("\n\n");
+                printf("\n\n==============================\n");
+                int ch;
+                char ch2;
+            six:
+                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                scanf(" %c", &ch2);
+                getchar();
+                switch (ch2)
+                {
+                case '>':
+                    if (endIdx < unique_index)
+                    {
+                        page++;
+                    }
+                    system("clear");
+                    goto pageupdate_6;
+                    break;
+                case '<':
+                    if (page > 1)
+                    {
+                        page--;
+                    }
+                    system("clear");
+                    goto pageupdate_6;
+                    break;
+                case '0':
+                    break;
+                default:
+                    printf("\nInvalid entry! Retry...\n");
+                    goto six;
+                    break;
+                }
+
+                while (1)
+                {
+                    printf("\nEnter the corresponding number of the book you want to issue (Enter [0] to re-enter publisher's name and [-1] to return to menu): ");
+                    scanf("%d", &ch);
+                    if (ch < -1 || ch > i)
+                    {
+                        printf("Invalid Entry! Retry...");
+                        continue;
+                    }
+                    break;
+                }
+                if (ch == 0)
+                {
+                    system("clear");
+                    getchar();
+                    goto reenter_query;
+                }
+                if (ch == -1)
+                {
+                    system("clear");
+                    getchar();
+                    goto user_entered_zero;
+                }
+
+                printf("\nYou have chosen to issue this book:\n\n");
+                fseek(fptr, arr4[ch - 1] - sizeof(BOOK), SEEK_SET);
+                fread(&b, sizeof(BOOK), 1, fptr);
+                printf("%s by %s; ISBN: %s; No. of copies available: %d\n", b.title, b.author, b.isbn, b.available_copies);
+                printf("Enter [1] to confirm and [0] to reselect: ");
+                int cc;
+                scanf("%d", &cc);
+                if (cc == 1)
+                {
+                    return ftell(fptr) - sizeof(BOOK);
+                    break;
+                }
+
+                continue;
+            }
+        case 7:
             return -1;
 
         default:
@@ -926,12 +1107,13 @@ user_entered_zero:
             printf("Enter '3' to search by name of the author(s)\n");
             printf("Enter '4' to search by name of the publisher(s)\n");
             printf("Enter '5' to search by ISBN code of the book\n");
-            printf("Enter '6' to go back to menu\n");
+            printf("Enter '6' for free text search\n");
+            printf("Enter '7' to go back to menu\n");
         }
     }
 }
-
+/*
 void main()
 {
     long result = search();
-}
+}*/
