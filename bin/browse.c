@@ -24,7 +24,7 @@ long *searchByCategories()
 
     // printf("\n\n----------xxxxxxxxxx----------\n\n");
 
-    int cat[c.no];
+    int cat[50];
     int count = 0;
     int num;
     int flag = 0;
@@ -437,7 +437,8 @@ user_entered_zero:
         {
         case 1:
         reenter_cat:
-            
+            int page = 1;
+            int totalBooks = 0;
             long *result = searchByCategories();
             if (result == NULL)
             {
@@ -446,6 +447,9 @@ user_entered_zero:
             }
             while (1)
             {
+               // int startIdx = (page - 1) * BOOKS_PER_PAGE;
+               // int endIdx = startIdx + BOOKS_PER_PAGE;
+
                 printf("\nThe following books are available:\n==============================\n");
 
                 for (i = 0; i < unique_index; i++)
@@ -453,10 +457,36 @@ user_entered_zero:
                     fseek(fptr, result[i] - sizeof(BOOK), SEEK_SET);
                     fread(&b, sizeof(BOOK), 1, fptr);
                     printf("\n[%d]: %s by %s; ISBN: %s; No. of copies available: %d", (i + 1), b.title, b.author, b.isbn, b.available_copies);
+                    totalBooks++;
                 }
                 printf("\n\n");
                 printf("\n\n==============================\n");
                 int ch;
+
+                // char ch2;
+                // printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                // scanf(" %c", &ch2);
+
+                // switch (ch2)
+                // {
+                // case '>':
+                //     if (endIdx < unique_index)
+                //     {
+                //         page++;
+                //     }
+                //     break;
+                // case '<':
+                //     if (page > 1)
+                //     {
+                //         page--;
+                //     }
+                //     break;
+                // case '0':
+                //     break;
+                // default:
+                //     printf("\nInvalid entry! Retry...\n");
+                //     break;
+                // }
 
                 while (1)
                 {
@@ -492,7 +522,8 @@ user_entered_zero:
                     return ftell(fptr) - sizeof(BOOK);
                 }
                 else if (cc == 0)
-                {   system("clear");
+                {
+                    system("clear");
                     continue;
                 }
                 else
