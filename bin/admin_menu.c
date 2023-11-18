@@ -16,7 +16,7 @@ void admin_menu(int *action)
     printf("[5]\t\tAdd New USER\n");
     printf("[6]\t\tView Library Catalogue\n");
     printf("[7]\t\tView All Registered USERS\n");
-    printf("[0]\t\tEXIT TO HOME\n\n");
+    printf("[0]\t\tLOGOUT\n\n");
     printf("Enter code for the action: ");
     scanf("%d",action);
     getchar();

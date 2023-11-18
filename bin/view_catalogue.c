@@ -12,7 +12,7 @@ void view_catalogue()
 
     while(fread(&b, sizeof(BOOK), 1, file))
     {
-     printf("%5s\t%-20s\t%-10s\t%.9s\t%04d\n",b.isbn,b.title,b.author,b.publisher,b.available_copies);
+     printf("%5s\t%-20s\t%-10s\t%9.9s\t%04d\n",b.isbn,b.title,b.author,b.publisher,b.available_copies);
     }
     printf("\nPress Enter to continue.\n");
     getchar();

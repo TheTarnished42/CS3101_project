@@ -4,17 +4,19 @@ This code displays the login menu when you log in to the library
 #include<stdio.h>
 #include "./structs.h"
 #include <string.h>
+// #include <conio.h>   
+#include <unistd.h>   
 
 void login_menu(char *usertype, char *uid, char *password, char *username)
 {
     system("clear");
-    printf("=============================================================\n");
-    printf("||                                                         ||\n");
-    printf("||               Welcome to GLitched Library               ||\n");
-    printf("||                                                         ||\n");
-    printf("|| Made with love by Ahan, Aishi, Apuroop, Nivas and Rohan ||\n");
-    printf("||                                                         ||\n");
-    printf("=============================================================\n\n\n");
+    printf("\t\t\t   =============================================================\n");
+    printf("\t\t\t   ||                                                         ||\n");
+    printf("\t\t\t   ||               Welcome to GLitched Library               ||\n");
+    printf("\t\t\t   ||                                                         ||\n");
+    printf("\t\t\t   || Made with love by Ahan, Aishi, Apuroop, Nivas and Rohan ||\n");
+    printf("\t\t\t   ||                                                         ||\n");
+    printf("\t\t\t   =============================================================\n\n\n");
     printf("Login to Access the library\n");
     printf("Enter USER ID: ");
     scanf("%s",uid);
@@ -40,8 +42,10 @@ void login_menu(char *usertype, char *uid, char *password, char *username)
         {   printf("Welcome %s!\n",m.first_name);
 
             while(flag==0){
-            printf("Enter PASSWORD: ");
-            scanf("%s",password);
+            password= getpass("Enter PASSWORD: ");
+            // printf("Enter PASSWORD: ");
+            // scanf("%s",password);
+            //scanf("%s",password);
             getchar();
             if (strcmp(password, m.m_psswd) == 0)
             {
