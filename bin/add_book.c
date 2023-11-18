@@ -223,7 +223,8 @@ void input_categories(BOOK *b)
 
 int add_book()
 {
-    printf("You are in Add Book.\n");
+    system("clear");
+    printf("You are in ADD BOOK.\n");
     BOOK b1;
     // b1 is the input structure.
     int flag_input = 0;

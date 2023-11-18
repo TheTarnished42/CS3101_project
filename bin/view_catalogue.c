@@ -16,5 +16,4 @@ void view_catalogue()
     }
     printf("\nPress Enter to continue.\n");
     getchar();
-    getchar();
 }

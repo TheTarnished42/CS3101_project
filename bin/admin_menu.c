@@ -14,9 +14,11 @@ void admin_menu(int *action)
     printf("[5]\t\tView Library Log\n");
     printf("[6]\t\tAdd New USER\n");
     printf("[7]\t\tView Library Catalogue\n");
+    printf("[0]\t\tEXIT TO HOME\n");
     printf("Enter code for the action: ");
     scanf("%d",action);
-    if (*action!=1 && *action!=2 && *action!=3 && *action!=4 && *action!=5 && *action!=6 && *action!=7)
+    getchar();
+    if (*action!=1 && *action!=2 && *action!=3 && *action!=4 && *action!=5 && *action!=6 && *action!=7 && *action!=0)
         {
                 *action=-1;
         }

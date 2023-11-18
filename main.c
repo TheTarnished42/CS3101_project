@@ -17,8 +17,9 @@
 #include "./bin/view_catalogue.c"
 //#include "./bin/submit_book.c"
 
-void main()
+int main()
 {
+do{
 /*
         printf("Press Enter to Continue");
         getchar();
@@ -34,6 +35,7 @@ void main()
         // Take login info from the user and check wether the UID and PASSWORD is valid or not
         int flag_0 = 1;
         int flag_1 = 0;
+        int flag_3=1;
         do
         {
                 login_menu(usertype, userid, password, username);
@@ -72,7 +74,7 @@ void main()
                 }
         } while (flag_0 == 1);
 
-
+do{
         while (flag_1 == 1)
         {
                 switch (*usertype)
@@ -101,7 +103,7 @@ void main()
                 }
         }
 
-        printf("USER-ID: %s, PASSWORD: %s, USERTYPE: %s, ACTION: %d\n", userid, password, usertype, *action);
+        //printf("USER-ID: %s, PASSWORD: %s, USERTYPE: %s, ACTION: %d\n", userid, password, usertype, *action);
 
         switch (*usertype)
         {
@@ -114,7 +116,6 @@ void main()
                         //searchBook();
                         break;
                 case 2:
-                        getchar();
                         add_book();
                         break;
                 case 3:
@@ -138,7 +139,13 @@ void main()
                         break;
                 case 7:
                         view_catalogue();
+                        break;
+                case 0:
+                        flag_3=0;
+                        break;
                         }
+
+                //getchar();
                 break;
         }
         case 'S':
@@ -154,6 +161,9 @@ void main()
                         break;
                 case 3: 
                         view_catalogue();
+                        break;
+                case 0:
+                        flag_3=0;
                         break;
                 }
                 break;
@@ -172,8 +182,14 @@ void main()
                 case 3: 
                         view_catalogue();
                         break;
+                case 0:
+                        flag_3=0;
+                        break;
                 }
                 break;
         }
         }
+        flag_1=1;
+}while(flag_3==1);
+}while(1);
 }
