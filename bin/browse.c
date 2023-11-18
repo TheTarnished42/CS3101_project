@@ -492,13 +492,14 @@ long search()
 user_entered_zero:
     system("clear");
     printf("\nYou have chosen to search for a book.\n\n");
-    printf("Enter '1' to search by category\n");
-    printf("Enter '2' to search by name of the book\n");
-    printf("Enter '3' to search by name of the author(s)\n");
-    printf("Enter '4' to search by name of the publisher(s)\n");
-    printf("Enter '5' to search by ISBN code of the book\n");
-    printf("Enter '6' for free text search\n");
-    printf("Enter '7' to go back to menu\n");
+    printf("Enter the appropriate code\n\n");
+    printf("[1] to search by category\n");
+    printf("[2] to search by name of the book\n");
+    printf("[3] to search by name of the author(s)\n");
+    printf("[4] to search by name of the publisher(s)\n");
+    printf("[5] to search by ISBN code of the book\n");
+    printf("[6] for free text search\n");
+    printf("[7] to go back to menu\n");
     int i;
     int page = 1;
     int totalBooks = 0;
@@ -542,7 +543,7 @@ user_entered_zero:
 
                 char ch2;
             one:
-                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                printf("\nUse '>' for the next page, '<' for the previous page, '0' to continue: ");
                 scanf(" %c", &ch2);
                 getchar();
                 switch (ch2)
@@ -570,10 +571,10 @@ user_entered_zero:
                     goto one;
                     break;
                 }
-
+                printf("\n--------------------\n(Enter [0] to re-enter categories and [-1] to return to menu)\n--------------------\n");
                 while (1)
                 {
-                    printf("\nEnter the corresponding number of the book you want to issue (Enter [0] to re-enter categories and [-1] to return to menu): ");
+                    printf("\nEnter the Serial No. of the book you want to issue:");
                     scanf("%d", &ch);
                     if (ch < -1 || ch > unique_index)
                     {
@@ -663,7 +664,7 @@ user_entered_zero:
 
                 char ch2;
             two:
-                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                printf("\nUse '>' for the next page, '<' for the previous page, '0' to continue: ");
                 scanf(" %c", &ch2);
                 getchar();
                 switch (ch2)
@@ -691,10 +692,10 @@ user_entered_zero:
                     goto two;
                     break;
                 }
-
+                printf("\n--------------------\n(Enter [0] to re-enter categories and [-1] to return to menu)\n--------------------\n");
                 while (1)
                 {
-                    printf("\nEnter the corresponding number of the book you want to issue (Enter [0] to re-enter title name and [-1] to return to menu): ");
+                    printf("\nEnter the Serial No. of the book you want to issue: ");
                     scanf("%d", &ch);
                     if (ch < -1 || ch > i)
                     {
@@ -766,7 +767,7 @@ user_entered_zero:
                 int ch;
                 char ch2;
             three:
-                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                printf("\nUse '>' for the next page, '<' for the previous page, '0' to continue: ");
                 scanf(" %c", &ch2);
                 getchar();
                 switch (ch2)
@@ -794,10 +795,10 @@ user_entered_zero:
                     goto three;
                     break;
                 }
-
+                printf("\n--------------------\n(Enter [0] to re-enter categories and [-1] to return to menu)\n--------------------\n");
                 while (1)
                 {
-                    printf("\nEnter the corresponding number of the book you want to issue (Enter [0] to re-enter author's name and [-1] to return to menu): ");
+                    printf("\nEnter the Serial No. of the book you want to issue: ");
                     scanf("%d", &ch);
                     if (ch < -1 || ch > i)
                     {
@@ -871,7 +872,7 @@ user_entered_zero:
                 int ch;
                 char ch2;
             four:
-                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                printf("\nUse '>' for the next page, '<' for the previous page, '0' to continue: ");
                 scanf(" %c", &ch2);
                 getchar();
                 switch (ch2)
@@ -899,10 +900,10 @@ user_entered_zero:
                     goto four;
                     break;
                 }
-
+                printf("\n--------------------\n(Enter [0] to re-enter categories and [-1] to return to menu)\n--------------------\n");
                 while (1)
                 {
-                    printf("\nEnter the corresponding number of the book you want to issue (Enter [0] to re-enter publisher's name and [-1] to return to menu): ");
+                    printf("\nEnter the Serial No. of the book you want to issue: ");
                     scanf("%d", &ch);
                     if (ch < -1 || ch > i)
                     {
@@ -1028,7 +1029,7 @@ user_entered_zero:
                 int ch;
                 char ch2;
             six:
-                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                printf("\nUse '>' for the next page, '<' for the previous page, '0' to continue: ");
                 scanf(" %c", &ch2);
                 getchar();
                 switch (ch2)
@@ -1056,10 +1057,10 @@ user_entered_zero:
                     goto six;
                     break;
                 }
-
+                printf("\n--------------------\n(Enter [0] to re-enter categories and [-1] to return to menu)\n--------------------\n");
                 while (1)
                 {
-                    printf("\nEnter the corresponding number of the book you want to issue (Enter [0] to re-enter publisher's name and [-1] to return to menu): ");
+                    printf("\nEnter the Serial No. of the book you want to issue: ");
                     scanf("%d", &ch);
                     if (ch < -1 || ch > i)
                     {
