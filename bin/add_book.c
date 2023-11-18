@@ -309,12 +309,13 @@ int add_book()
 
 void main()
 {
-    // add_book();
-    FILE *fptr;
-    BOOK b1;
-    fptr = fopen("../BooksDB/books.txt", "r+");
-    fread(&b1, sizeof(BOOK), 1, fptr);
-    fread(&b1, sizeof(BOOK), 1, fptr);
-    printf("%s", b1.available_UID[6]);
+    add_book();
+    // FILE *fptr;
+    // BOOK b1;
+    // fptr = fopen("../BooksDB/books.txt", "r+");
+    // fread(&b1, sizeof(BOOK), 1, fptr);
+    // // fread(&b1, sizeof(BOOK), 1, fptr);
+    // printf("%s\n", b1.title);
+    // printf("%d", b1.available_copies);
     printf("\nExit\n");
 }

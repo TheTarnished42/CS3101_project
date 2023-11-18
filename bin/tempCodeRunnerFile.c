@@ -1,0 +1,1 @@
+fread(&b1, sizeof(BOOK), 1, fptr);
