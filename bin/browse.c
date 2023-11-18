@@ -18,7 +18,7 @@ the positions of the BOOK structs in the file "books.txt"
 */
 long *searchByCategories()
 {
-    FILE *catptr = fopen("../BooksDB/Categories.txt", "r+");
+    FILE *catptr = fopen("./BooksDB/Categories.txt", "r+");
     CAT c;
     system("clear");
 
@@ -26,9 +26,12 @@ long *searchByCategories()
     int count = 0;
     int num;
     int flag = 0;
+
     while (1)
     {
         fseek(catptr, 0, SEEK_SET);
+
+        // Printing existing categories
         printf("----------EXISTING CATEGORIES----------\n\n");
         while (fread(&c, sizeof(c), 1, catptr))
         {
@@ -37,10 +40,11 @@ long *searchByCategories()
 
         printf("\n\n----------xxxxxxxxxx----------\n\n");
 
+        // Accepting categories from user
         printf("\nEnter category number(s) (Enter 0 to stop):\n");
         while (1)
         {
-            
+
             scanf("%d", &num);
             if (num == 0)
             {
@@ -72,11 +76,14 @@ long *searchByCategories()
 
         printf("\n--------------------\n");
         printf("\nPrinting categories entered: ");
+        // Printing the categories entered
         for (int i = 0; i < count; i++)
         {
             printf("%d ", cat[i]);
         }
         printf("\n");
+
+        // Seeking for confirmation
         printf("\nEnter [1] to confirm and [0] to re-enter your entries: ");
         int reenter;
         scanf("%d", &reenter);
@@ -92,6 +99,7 @@ long *searchByCategories()
         }
     }
 
+    // Printing the categories entered
     system("clear");
     printf("====================");
     printf("\nCategories confirmed: ");
@@ -112,14 +120,17 @@ long *searchByCategories()
     }
     printf("\n");
 
+    // Declaring a pointer element to store all the ftell(fptr) values of the books
+    // belonging to the entered categories
     long *arr_ftells = NULL;
     int max_elements = 10;
     arr_ftells = (long *)malloc(max_elements * sizeof(long));
-    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
+    FILE *fptr = fopen("./BooksDB/books.txt", "r+");
     BOOK b;
     int index = 0;
     k = 0;
     int l = 0;
+    // Assigning values to arr_ftells
     while (fread(&b, sizeof(BOOK), 1, fptr))
     {
         for (int i = 0; i < 50; i++)
@@ -151,6 +162,7 @@ long *searchByCategories()
     }
 
     unique_index = 0;
+    // Removing duplicates
     for (int i = 0; i < index; i++)
     {
         int duplicate = 0;
@@ -182,7 +194,7 @@ int compare(char **str1, char **str2)
     int n, m;
     n = 0;
     m = 0;
-    int count = 0;
+    int count = 0; //Counter variable to store the number of words in common
     while (str1[n] != NULL)
     {
         m = 0;
@@ -241,7 +253,7 @@ of the book
 long *searchByTitle(char str[100])
 {
 
-    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
+    FILE *fptr = fopen("./BooksDB/books.txt", "r+");
     BOOK b;
 
     int arr[100];
@@ -302,7 +314,7 @@ long *searchByTitle(char str[100])
 long *searchByAuthor(char str[100])
 {
 
-    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
+    FILE *fptr = fopen("./BooksDB/books.txt", "r+");
     BOOK b;
 
     int arr[100];
@@ -363,7 +375,7 @@ long *searchByAuthor(char str[100])
 long *searchByPublisher(char str[100])
 {
 
-    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
+    FILE *fptr = fopen("./BooksDB/books.txt", "r+");
     BOOK b;
 
     int arr[100];
@@ -423,7 +435,7 @@ long *searchByPublisher(char str[100])
 
 long *searchByFreeText(char str[100])
 {
-    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
+    FILE *fptr = fopen("./BooksDB/books.txt", "r+");
     BOOK b;
 
     int arr[100];
@@ -488,7 +500,7 @@ long *searchByFreeText(char str[100])
 }
 long search()
 {
-    FILE *fptr = fopen("../BooksDB/books.txt", "r+");
+    FILE *fptr = fopen("./BooksDB/books.txt", "r+");
     BOOK b;
 
 user_entered_zero:
@@ -1115,9 +1127,4 @@ user_entered_zero:
             printf("Enter '7' to go back to menu\n");
         }
     }
-}
-
-void main()
-{
-    long result = search();
 }
