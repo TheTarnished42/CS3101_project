@@ -285,7 +285,7 @@ long *searchByTitle(char str[100])
             }
         }
     }
-
+    unique_index = index;
     return ftell_arr;
 }
 
@@ -346,7 +346,7 @@ long *searchByAuthor(char str[100])
             }
         }
     }
-
+    unique_index = index;
     return ftell_arr;
 }
 
@@ -407,7 +407,7 @@ long *searchByPublisher(char str[100])
             }
         }
     }
-
+    unique_index = index;
     return ftell_arr;
 }
 
@@ -426,6 +426,8 @@ user_entered_zero:
     printf("Enter '5' to search by ISBN code of the book\n");
     printf("Enter '6' to go back to menu\n");
     int i;
+    int page = 1;
+    int totalBooks = 0;
 
     int choice;
     while (1)
@@ -437,22 +439,23 @@ user_entered_zero:
         {
         case 1:
         reenter_cat:
-            int page = 1;
-            int totalBooks = 0;
+            page = 1;
+            totalBooks = 0;
             long *result = searchByCategories();
             if (result == NULL)
             {
                 printf("Error in search\n");
                 return -1;
             }
+        pageupdate_1:
             while (1)
             {
-               // int startIdx = (page - 1) * BOOKS_PER_PAGE;
-               // int endIdx = startIdx + BOOKS_PER_PAGE;
+                int startIdx = (page - 1) * BOOKS_PER_PAGE;
+                int endIdx = startIdx + BOOKS_PER_PAGE;
 
                 printf("\nThe following books are available:\n==============================\n");
 
-                for (i = 0; i < unique_index; i++)
+                for (i = startIdx; i < endIdx && i < unique_index; i++)
                 {
                     fseek(fptr, result[i] - sizeof(BOOK), SEEK_SET);
                     fread(&b, sizeof(BOOK), 1, fptr);
@@ -463,30 +466,36 @@ user_entered_zero:
                 printf("\n\n==============================\n");
                 int ch;
 
-                // char ch2;
-                // printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
-                // scanf(" %c", &ch2);
-
-                // switch (ch2)
-                // {
-                // case '>':
-                //     if (endIdx < unique_index)
-                //     {
-                //         page++;
-                //     }
-                //     break;
-                // case '<':
-                //     if (page > 1)
-                //     {
-                //         page--;
-                //     }
-                //     break;
-                // case '0':
-                //     break;
-                // default:
-                //     printf("\nInvalid entry! Retry...\n");
-                //     break;
-                // }
+                char ch2;
+            one:
+                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                scanf(" %c", &ch2);
+                getchar();
+                switch (ch2)
+                {
+                case '>':
+                    if (endIdx < unique_index)
+                    {
+                        page++;
+                    }
+                    system("clear");
+                    goto pageupdate_1;
+                    break;
+                case '<':
+                    if (page > 1)
+                    {
+                        page--;
+                    }
+                    system("clear");
+                    goto pageupdate_1;
+                    break;
+                case '0':
+                    break;
+                default:
+                    printf("\nInvalid entry! Retry...\n");
+                    goto one;
+                    break;
+                }
 
                 while (1)
                 {
@@ -551,11 +560,18 @@ user_entered_zero:
                 }
                 printf("%ld, ", arr[i]);
             }
+            totalBooks = 0;
+            page = 1;
+        pageupdate_2:
             while (1)
             {
-                printf("\nThe following books available\n==============================\n");
 
-                for (i = 0; i < 100; i++)
+                int startIdx = (page - 1) * BOOKS_PER_PAGE;
+                int endIdx = startIdx + BOOKS_PER_PAGE;
+
+                printf("\nThe following books available (displayed in decreasing order of similarity to your search query):\n==============================\n");
+
+                for (i = 0; i < endIdx && i < unique_index; i++)
                 {
                     if (arr[i] == -1)
                     {
@@ -563,11 +579,43 @@ user_entered_zero:
                     }
                     fseek(fptr, arr[i] - sizeof(BOOK), SEEK_SET);
                     fread(&b, sizeof(BOOK), 1, fptr);
+                    totalBooks++;
                     printf("\n[%d]: %s by %s; ISBN: %s; No. of copies available: %d", (i + 1), b.title, b.author, b.isbn, b.available_copies);
                 }
                 printf("\n\n");
                 printf("\n\n==============================\n");
                 int ch;
+
+                char ch2;
+            two:
+                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                scanf(" %c", &ch2);
+                getchar();
+                switch (ch2)
+                {
+                case '>':
+                    if (endIdx < unique_index)
+                    {
+                        page++;
+                    }
+                    system("clear");
+                    goto pageupdate_2;
+                    break;
+                case '<':
+                    if (page > 1)
+                    {
+                        page--;
+                    }
+                    system("clear");
+                    goto pageupdate_2;
+                    break;
+                case '0':
+                    break;
+                default:
+                    printf("\nInvalid entry! Retry...\n");
+                    goto two;
+                    break;
+                }
 
                 while (1)
                 {
@@ -616,12 +664,17 @@ user_entered_zero:
             long *arr2;
             arr2 = searchByAuthor(name_of_auth);
             fseek(fptr, 0, SEEK_SET);
+            page = 1;
+            totalBooks = 0;
+        pageupdate_3:
 
             while (1)
             {
-                printf("\nThe following books available\n==============================\n");
+                int startIdx = (page - 1) * BOOKS_PER_PAGE;
+                int endIdx = startIdx + BOOKS_PER_PAGE;
+                printf("\nThe following books available (displayed in decreasing order of similarity to your search query):\n==============================\n");
 
-                for (i = 0; i < 100; i++)
+                for (i = startIdx; i < endIdx && i < unique_index; i++)
                 {
                     if (arr2[i] == -1)
                     {
@@ -629,11 +682,42 @@ user_entered_zero:
                     }
                     fseek(fptr, arr2[i] - sizeof(BOOK), SEEK_SET);
                     fread(&b, sizeof(BOOK), 1, fptr);
+                    totalBooks++;
                     printf("\n[%d]: %s by %s; ISBN: %s; No. of copies available: %d", (i + 1), b.title, b.author, b.isbn, b.available_copies);
                 }
                 printf("\n\n");
                 printf("\n\n==============================\n");
                 int ch;
+                char ch2;
+            three:
+                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                scanf(" %c", &ch2);
+                getchar();
+                switch (ch2)
+                {
+                case '>':
+                    if (endIdx < unique_index)
+                    {
+                        page++;
+                    }
+                    system("clear");
+                    goto pageupdate_3;
+                    break;
+                case '<':
+                    if (page > 1)
+                    {
+                        page--;
+                    }
+                    system("clear");
+                    goto pageupdate_3;
+                    break;
+                case '0':
+                    break;
+                default:
+                    printf("\nInvalid entry! Retry...\n");
+                    goto three;
+                    break;
+                }
 
                 while (1)
                 {
@@ -682,12 +766,18 @@ user_entered_zero:
             long *arr3;
             arr3 = searchByPublisher(name_of_pub);
             fseek(fptr, 0, SEEK_SET);
+            page = 1;
+            totalBooks = 0;
 
+        pageupdate_4:
             while (1)
             {
-                printf("\nThe following books available\n==============================\n");
+                int startIdx = (page - 1) * BOOKS_PER_PAGE;
+                int endIdx = startIdx + BOOKS_PER_PAGE;
 
-                for (i = 0; i < 100; i++)
+                printf("\nThe following books available (displayed in decreasing order of similarity to your search query):5\n==============================\n");
+
+                for (i = startIdx; i < endIdx && i < unique_index; i++)
                 {
                     if (arr3[i] == -1)
                     {
@@ -695,11 +785,44 @@ user_entered_zero:
                     }
                     fseek(fptr, arr3[i] - sizeof(BOOK), SEEK_SET);
                     fread(&b, sizeof(BOOK), 1, fptr);
+                    totalBooks++;
                     printf("\n[%d]: %s by %s; ISBN: %s; No. of copies available: %d", (i + 1), b.title, b.author, b.isbn, b.available_copies);
                 }
+
+
                 printf("\n\n");
                 printf("\n\n==============================\n");
                 int ch;
+                char ch2;
+                four:
+                printf("\nEnter '>' to go to the next page, '<' to go to the previous page, or '0' to exit: ");
+                scanf(" %c", &ch2);
+                getchar();
+                switch (ch2)
+                {
+                case '>':
+                    if (endIdx < unique_index)
+                    {
+                        page++;
+                    }
+                    system("clear");
+                    goto pageupdate_4;
+                    break;
+                case '<':
+                    if (page > 1)
+                    {
+                        page--;
+                    }
+                    system("clear");
+                    goto pageupdate_4;
+                    break;
+                case '0':
+                    break;
+                default:
+                    printf("\nInvalid entry! Retry...\n");
+                    goto four;
+                    break;
+                }
 
                 while (1)
                 {
@@ -746,13 +869,15 @@ user_entered_zero:
         reenter_isbn:
             printf("\nEnter the ISBN code of the book: ");
             fgets(isbn, 14, stdin);
-            isbn[strcmp(isbn, "\n")] = '\0';
+            isbn[strcspn(isbn, "\n")] = '\0';
             fseek(fptr, 0, SEEK_SET);
+            int f = 0;
             printf("\n==============================\n\n");
             while (fread(&b, sizeof(BOOK), 1, fptr))
             {
-                if (strcmp(isbn, b.isbn))
+                if (strcmp(isbn, b.isbn) == 0)
                 {
+                    f = 1;
                     printf("You have chosen to issue this book:\n\n");
                     printf("%s by %s; ISBN: %s; No. of copies available: %d\n", b.title, b.author, b.isbn, b.available_copies);
                     printf("Enter [1] to confirm and [0] to re-enter ISBN: ");
@@ -765,22 +890,28 @@ user_entered_zero:
                     }
                     if (cc == 0)
                     {
+                        system("clear");
+                        getchar();
                         goto reenter_isbn;
                     }
                 }
-                else
+            }
+            if (f == 0)
+            {
+                printf("No such ISBN found! Enter [0] to re-enter ISBN and [-1] to return back to menu: ");
+                int cc;
+                scanf("%d", &cc);
+                if (cc == 0)
                 {
-                    printf("No such ISBN found! Enter [0] to re-enter ISBN and [-1] to return back to menu: ");
-                    int cc;
-                    scanf("%d", &cc);
-                    if (cc == 0)
-                    {
-                        goto reenter_isbn;
-                    }
-                    else if (cc == -1)
-                    {
-                        goto user_entered_zero;
-                    }
+                    system("clear");
+                    getchar();
+                    goto reenter_isbn;
+                }
+                else if (cc == -1)
+                {
+                    system("clear");
+                    getchar();
+                    goto user_entered_zero;
                 }
             }
 
