@@ -194,7 +194,7 @@ int compare(char **str1, char **str2)
     int n, m;
     n = 0;
     m = 0;
-    int count = 0; //Counter variable to store the number of words in common
+    int count = 0; // Counter variable to store the number of words in common
     while (str1[n] != NULL)
     {
         m = 0;
@@ -218,29 +218,35 @@ by white space
 */
 char **tokenize(char str[100])
 {
+    // Convert all characters in the string to lowercase
     for (int i = 0; i < strlen(str); i++)
     {
         str[i] = tolower(str[i]);
     }
 
+    // Allocate memory for an array of pointers to words
     char **words = (char **)malloc(MAX_WORDS * sizeof(char *));
+
+    // Allocate memory for each word
     for (int i = 0; i < MAX_WORDS; i++)
     {
         words[i] = (char *)malloc(MAX_WORD_LENGTH * sizeof(char));
     }
 
+    // Tokenize the string using space as the delimiter
     char *token = strtok(str, " ");
     int n = 0;
 
+    // Loop through each token and store it in the 'words' array
     while (token != NULL)
     {
-        words[n] = strdup(token);
+        words[n] = strdup(token); // Duplicate the token and store in 'words'
         n++;
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " "); // Move to the next token
     }
 
-    words[n] = NULL;
-    return words;
+    words[n] = NULL; // Set the last element of 'words' to NULL to mark the end
+    return words;    // Return the array of words
 }
 /*
 searchByTitle() will take input from the user as to what
@@ -249,6 +255,9 @@ the positions of the BOOK structs in the file "books.txt"
 
 This array is sorted such that it allows free text search by the user in the title
 of the book
+
+The same flow of logic has been used for
+searchByAuthor(), searchByPublisher() and searchByFreeText()
 */
 long *searchByTitle(char str[100])
 {
@@ -263,15 +272,15 @@ long *searchByTitle(char str[100])
     int index = 0;
     char **words1;
     char **words2;
-    words1 = tokenize(str);
+    words1 = tokenize(str); // Storing the entered string as an array of words
     while (fread(&b, sizeof(BOOK), 1, fptr))
     {
-        words2 = tokenize(b.title);
-        result = compare(words1, words2);
+        words2 = tokenize(b.title);       // Storing each book title as an array of words
+        result = compare(words1, words2); // Comparing how many words are same
         if (result > 0)
         {
             arr[index] = result;
-            ftell_arr[index] = ftell(fptr);
+            ftell_arr[index] = ftell(fptr); // Updating ftell_arr
             index++;
         }
 
@@ -290,7 +299,7 @@ long *searchByTitle(char str[100])
         free(words1[i]);
     }
     free(words1);
-
+    // Sorting arr in descending order and appropriately re-arranging ftell_arr
     for (int i = 0; i < index - 1; i++)
     {
         for (int j = 0; j < index - i - 1; j++)
@@ -498,6 +507,17 @@ long *searchByFreeText(char str[100])
     unique_index = index;
     return ftell_arr;
 }
+
+/*
+This method provides a user-friendly, menu driven interface to browse the library
+database through various options by invoking the relevant methods defined above.
+
+This method returns the position of the BOOK struct sought by the user for issue.
+If the user does not want to issue, then -1 is returned.
+
+Care has been taken that no more than 10 books are displayed at a time to allow
+readability and navigation options are also there. Free text search has been implemented as well.
+*/
 long search()
 {
     FILE *fptr = fopen("./BooksDB/books.txt", "r+");
