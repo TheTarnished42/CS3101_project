@@ -48,7 +48,7 @@ void login_menu(char *usertype, char *uid, char *password, char *username)
                 flag=1;
                 *usertype=m.m_id[0];
                 strcpy(username,m.first_name);
-                sscanf(username,"%s",m.first_name);
+                //sscanf(username,"%s",m.first_name);
                 break;
             }
             else{

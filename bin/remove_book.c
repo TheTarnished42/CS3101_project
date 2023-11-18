@@ -13,7 +13,7 @@ long *searchBook2(char *isbn)
     static long arr[2];
     arr[0] = 0;
     arr[1] = 0;
-    fptr = fopen("../BooksDB/books.txt", "r+");
+    fptr = fopen("./BooksDB/books.txt", "r+");
 
     while (fread(&b1, sizeof(BOOK), 1, fptr))
     {
@@ -32,12 +32,12 @@ long *searchBook2(char *isbn)
     fclose(fptr);
     return arr;
 }
-void add_categories()
+void add_categories2()
 {
     FILE *catptr;
     CAT c;
     c.no = 0;
-    catptr = fopen("../BooksDB/Categories.txt", "r+");
+    catptr = fopen("./BooksDB/Categories.txt", "r+");
     while (fread(&c, sizeof(c), 1, catptr))
     {
     }
@@ -80,13 +80,13 @@ void add_categories()
     }
     fclose(catptr);
 }
-void input_categories(BOOK *b)
+void input_categories2(BOOK *b)
 {
 
     printf("#---------------------------------------------------------#\n");
     FILE *catptr;
     CAT c;
-    catptr = fopen("../BooksDB/Categories.txt", "r+");
+    catptr = fopen("./BooksDB/Categories.txt", "r+");
     printf("--EXISTING CATEGORIES--\n");
     while (fread(&c, sizeof(c), 1, catptr))
     {
@@ -102,7 +102,7 @@ void input_categories(BOOK *b)
         if (tolower(yn[0]) == 'y')
         {
             getchar();
-            add_categories();
+            add_categories2();
             break;
         }
         else if (tolower(yn[0]) == 'n')
@@ -114,7 +114,7 @@ void input_categories(BOOK *b)
     }
     if (tolower(yn[0]) == 'y')
     {
-        catptr = fopen("../BooksDB/Categories.txt", "r+");
+        catptr = fopen("./BooksDB/Categories.txt", "r+");
         printf("\n--EXISTING CATEGORIES--\n");
         while (fread(&c, sizeof(c), 1, catptr))
         {
@@ -177,7 +177,7 @@ void print_categories(BOOK b)
 {
     FILE *catptr;
     CAT c;
-    catptr = fopen("../BooksDB/Categories.txt", "r+");
+    catptr = fopen("./BooksDB/Categories.txt", "r+");
     int i = 0;
     printf("--Categories--\n");
     while (b.categories[i] != 0)
@@ -197,6 +197,7 @@ void print_categories(BOOK b)
 int remove_book()
 {
     char isbn[14];
+    system("clear");
     printf("You are in Remove Book.\n");
     printf("Enter the isbn of book you want to edit: ");
     scanf("%s", isbn);
@@ -206,7 +207,7 @@ int remove_book()
 
     BOOK b;
     FILE *bksptr;
-    bksptr = fopen("../BooksDB/books.txt", "r+");
+    bksptr = fopen("./BooksDB/books.txt", "r+");
     fseek(bksptr, searchres[1], SEEK_SET);
     fread(&b, sizeof(BOOK), 1, bksptr);
     char isbn2[14];
@@ -271,7 +272,7 @@ int remove_book()
             }
             else if (*choice == 5)
             {
-                input_categories(&b);
+                input_categories2(&b);
             }
             else if (*choice == 6)
             {
@@ -331,8 +332,8 @@ int remove_book()
         printf("Said isbn doesnot exist.\n");
     }
 }
-void main()
-{
-    remove_book();
-    printf("\nExit2\n");
-}
+// void main()
+// {
+//     remove_book();
+//     printf("\nExit2\n");
+// }

@@ -7,17 +7,20 @@
 #include "./bin/login_menu.c"
 #include "./bin/admin_menu.c"
 #include "./bin/member_menu.c"
-//#include "./bin/browse.c"
+#include "./bin/browse.c"
 #include "./bin/add_book.c"
-//#include "./bin/remove_book.c"
+#include "./bin/remove_book.c"
 //#include "./bin/view_current_issue.c"
 //#include "./bin/view_lib_log.c"
 #include "./bin/add_user.c"
 #include "./bin/request_issue.c"
 #include "./bin/view_catalogue.c"
+#include "./bin/view_all_user.c"
+
 //#include "./bin/submit_book.c"
 
 int main()
+
 {
 do{
 /*
@@ -26,9 +29,9 @@ do{
         system("clear");
 */
         char *usertype = malloc(sizeof(char));
-        char *password = malloc(100);
-        char *userid = malloc(100);
-        char *username = malloc(100);
+        char *password = malloc(20);
+        char *userid = malloc(20);
+        char *username = malloc(20);
         // Take ACTION from the user and checking if it is valid or not
         int *action = malloc(sizeof(int));
 
@@ -64,6 +67,7 @@ do{
                         break;
                 case 'F':
                         flag_0 = 0;
+                        system("clear");
                         printf("Login successful!\n");
                         printf("Welcome %s\n", username);
                         printf("You have logged in as a FACULTY.\n");
@@ -119,7 +123,7 @@ do{
                         add_book();
                         break;
                 case 3:
-                        //remove_book();
+                        remove_book();
                         printf("remove_book");
                         break;
                 case 4:
@@ -133,12 +137,11 @@ do{
                 case 6:
                         add_user();
                         break;
-                                case 'S':
-                        member_menu(action);
-                        flag_1 = 0;
-                        break;
                 case 7:
                         view_catalogue();
+                        break;
+                case 8:
+                        view_all_users();
                         break;
                 case 0:
                         flag_3=0;
@@ -153,13 +156,22 @@ do{
                 switch (*action)
                 {
                 case 1:
-                        printf("browse_book");
-                        //searchBook();
-                        break;
+                        //printf("browse_book");
+                        long pos=search();
+                        if (pos!=-1)
+                        {
+                            printf("Position of book is %ld",pos);
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
                 case 2:
                         submit_book(userid);
                         break;
                 case 3: 
+                        getchar();
                         view_catalogue();
                         break;
                 case 0:
@@ -173,13 +185,14 @@ do{
                 switch (*action)
                 {
                 case 1:
-                        printf("browse_book");
+                        long pos=search();
                         //searchBook();
                         break;
                 case 2:
                         submit_book(userid);
                         break;
                 case 3: 
+                        getchar();
                         view_catalogue();
                         break;
                 case 0:
