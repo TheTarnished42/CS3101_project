@@ -7,6 +7,13 @@ This code displays the login menu when you log in to the library
 void login_menu(char *usertype, char *uid, char *password, char *username)
 {
     system("clear");
+    printf("=============================================================\n");
+    printf("||                                                         ||\n");
+    printf("||               Welcome to GLitched Library               ||\n");
+    printf("||                                                         ||\n");
+    printf("|| Made with love by Ahan, Aishi, Apuroop, Nivas and Rohan ||\n");
+    printf("||                                                         ||\n");
+    printf("=============================================================\n\n\n");
     printf("Login to Access the library\n");
     printf("Enter USER ID: ");
     scanf("%s",uid);

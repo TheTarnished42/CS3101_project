@@ -9,6 +9,7 @@ void member_menu(int *action)
     printf("====\t\t====\n");
     printf("[1]\t\tBrowse\n");
     printf("[2]\t\tSubmit Book\n");
+    printf("[3]\t\tView Library Catalogue\n");
     printf("Enter code for the action: ");
     scanf("%d",action);
     if (*action!=1 && *action!=2 && *action!=3)

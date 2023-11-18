@@ -41,4 +41,3 @@ void add_user() {
         scanf("%d",&flag);
     }while(flag==1);
 }
-

@@ -14,23 +14,16 @@
 //#include "./bin/view_lib_log.c"
 #include "./bin/add_user.c"
 #include "./bin/request_issue.c"
+#include "./bin/view_catalogue.c"
 //#include "./bin/submit_book.c"
 
 void main()
 {
-        system("clear");
-        printf("=============================================================\n");
-        printf("||                                                         ||\n");
-        printf("||               Welcome to GLitched Library               ||\n");
-        printf("||                                                         ||\n");
-        printf("|| Made with love by Ahan, Aishi, Apuroop, Nivas and Rohan ||\n");
-        printf("||                                                         ||\n");
-        printf("=============================================================\n\n\n");
-
+/*
         printf("Press Enter to Continue");
         getchar();
         system("clear");
-
+*/
         char *usertype = malloc(sizeof(char));
         char *password = malloc(100);
         char *userid = malloc(100);
@@ -142,7 +135,10 @@ void main()
                                 case 'S':
                         member_menu(action);
                         flag_1 = 0;
-                        break;}
+                        break;
+                case 7:
+                        view_catalogue();
+                        }
                 break;
         }
         case 'S':
@@ -155,6 +151,26 @@ void main()
                         break;
                 case 2:
                         submit_book(userid);
+                        break;
+                case 3: 
+                        view_catalogue();
+                        break;
+                }
+                break;
+        }
+        case 'F':
+        {
+                switch (*action)
+                {
+                case 1:
+                        printf("browse_book");
+                        //searchBook();
+                        break;
+                case 2:
+                        submit_book(userid);
+                        break;
+                case 3: 
+                        view_catalogue();
                         break;
                 }
                 break;
