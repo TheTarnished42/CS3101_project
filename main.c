@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 // #include <unistd.h>
-
 // User defined modules
 #include "./bin/log.c"
 #include "./bin/login_menu.c"

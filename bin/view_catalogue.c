@@ -7,12 +7,12 @@ void view_catalogue()
     FILE *file = fopen("./BooksDB/books.txt", "r+");
     // printing all the books in the library
     BOOK b;
-    printf("ISBN \tTITLE\t\t\t\tAUTHOR\t\tPUBLISHER\tAVAILABLE COPIES\n");
-    printf("=====\t=====\t\t\t\t======\t\t=========\t================\n");
+    printf("ISBN \tTITLE\t\t\t\tAUTHOR\t\t\t     PUBLISHER\t    AVAILABLE COPIES\n");
+    printf("=====\t=====\t\t\t\t======\t\t\t     =========\t    ================\n");
     int counter = 0;
     while (fread(&b, sizeof(BOOK), 1, file))
     {
-        printf("%5s\t%-25.25s\t%10.10s\t%9.9s\t%04d\n", b.isbn, b.title, b.author, b.publisher, b.available_copies); // formatted printing
+        printf("%5s\t%-25.25s\t%-15.15s\t\t%14.14s\t\t\t%04d\n", b.isbn, b.title, b.author, b.publisher, b.available_copies); // formatted printing
         counter++;
         if (counter % 10 == 0) // printing only 10 entries at once
         {
