@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "structs.h"
+// #include "./log.c"
 void print_byisbn(char isbn[14])
 {
     BOOK b;
@@ -17,6 +18,7 @@ void print_byisbn(char isbn[14])
         }
     }
 }
+
 int issue_book(char *userid, char utype, long pos) // updatesbooks.txt and issues.txt
 {
 
@@ -109,6 +111,7 @@ int issue_book(char *userid, char utype, long pos) // updatesbooks.txt and issue
         fseek(issfile, -sizeof(ISSUE), SEEK_CUR);
         fwrite(&issue, sizeof(ISSUE), 1, issfile);
         fclose(issfile);
+        libraryLog(userid, 1);
         printf("Book Issued.\n");
     }
 
@@ -179,7 +182,7 @@ int submit_book(char *userid)
     time(&now);
     double period_s = difftime(now, issue.doi[index]);
     double period_d = period_s / 86400;
-    printf("You had the book for %fs that is, %f days\n", period_s, period_d);
+    printf("You had the book for %d days(%ld seconds)\n", (int)period_d, (long)period_s);
     printf("Issue Period was %d days.\n", issue.issue_period[index]);
     if (period_d >= issue.issue_period[index])
     {
@@ -225,6 +228,7 @@ int submit_book(char *userid)
             fseek(bksfile, -sizeof(BOOK), SEEK_CUR);
             fwrite(&b, sizeof(BOOK), 1, bksfile);
             fclose(bksfile);
+            libraryLog(userid, 2);
             printf("\nBook submitted to the GLitched Library.\n");
             break;
         }

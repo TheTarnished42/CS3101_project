@@ -4,6 +4,7 @@
 // #include <unistd.h>
 
 // User defined modules
+#include "./bin/log.c"
 #include "./bin/login_menu.c"
 #include "./bin/admin_menu.c"
 #include "./bin/member_menu.c"
@@ -12,13 +13,11 @@
 #include "./bin/add_book.c"
 #include "./bin/remove_book.c"
 #include "./bin/view_current_issue.c"
-// #include "./bin/view_lib_log.c"
 #include "./bin/add_user.c"
 #include "./bin/request_issue.c"
 #include "./bin/view_catalogue.c"
 #include "./bin/view_all_user.c"
 #include "./bin/view_lib_log.c"
-#include "./bin/log.c"
 #include "./bin/view_issued_book.c"
 // #include <string.h>
 
@@ -123,26 +122,30 @@ int main()
                                 switch (*action)
                                 {
                                 case 1:
-                                        add_book();
+                                        add_book(userid);
                                         break;
                                 case 2:
-                                        remove_book();
+                                        remove_book(userid);
                                         break;
                                 case 3:
                                         view_current_issue();
+                                        libraryLog(userid, 3);
                                         break;
                                 case 4:
                                         // printf("view library log");
-                                        view_lib_log();
+                                        view_log();
+                                        libraryLog(userid, 4);
                                         break;
                                 case 5:
-                                        add_user();
+                                        add_user(userid);
                                         break;
                                 case 6:
                                         view_catalogue();
+                                        libraryLog(userid, 6);
                                         break;
                                 case 7:
                                         view_all_users();
+                                        libraryLog(userid, 7);
                                         break;
                                 case 0:
                                         flag_3 = 0;
@@ -172,11 +175,12 @@ int main()
                                 case 3:
                                         getchar();
                                         view_catalogue();
+                                        libraryLog(userid, 3);
                                         break;
                                 case 4:
                                         getchar();
                                         view_issued_book(userid);
-                                        printf("Shown");
+                                        libraryLog(userid, 4);
                                         break;
                                 case 0:
                                         flag_3 = 0;
@@ -213,7 +217,7 @@ int main()
                         }
                         }
                         flag_1 = 1;
-                        writeToLogFile(userid, *action);
+                        // writeToLogFile(userid, *action);
                 } while (flag_3 == 1);
         } while (1);
 }

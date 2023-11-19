@@ -10,6 +10,9 @@
 #define BOOKS_PER_PAGE 10
 
 int unique_index;
+/*DISCLAIMER: It is a long code so recommended to view it in Code Editors like VS-CODE etc. that allows you to
+Minimise functions*/
+/*This is the main function used to search books.*/
 
 /*
 searchByCategories() will take input from the user as to what
@@ -28,7 +31,7 @@ long *searchByCategories()
     int flag = 0;
     while (1)
     {
-        fseek(catptr, 0, SEEK_SET);
+        fseek(catptr, 0, SEEK_SET); // printing existing categories
         printf("----------EXISTING CATEGORIES----------\n\n");
         while (fread(&c, sizeof(c), 1, catptr))
         {
@@ -36,11 +39,11 @@ long *searchByCategories()
         }
 
         printf("\n\n----------xxxxxxxxxx----------\n\n");
-
+        // accepting categories from user.
         printf("\nEnter category number(s) (Enter 0 to stop):\n");
         while (1)
         {
-            
+
             scanf("%d", &num);
             if (num == 0)
             {
@@ -72,11 +75,13 @@ long *searchByCategories()
 
         printf("\n--------------------\n");
         printf("\nPrinting categories entered: ");
+        // printing entered categories
         for (int i = 0; i < count; i++)
         {
             printf("%d ", cat[i]);
         }
         printf("\n");
+        // seeking confirmation.
         printf("\nEnter [1] to confirm and [0] to re-enter your entries: ");
         int reenter;
         scanf("%d", &reenter);
@@ -91,7 +96,7 @@ long *searchByCategories()
             count = 0;
         }
     }
-
+    // printing entered categories.
     system("clear");
     printf("====================");
     printf("\nCategories confirmed: ");
@@ -112,6 +117,8 @@ long *searchByCategories()
     }
     printf("\n");
 
+    // Declaring a pointer element to store all the ftell(fptr) values of the books
+    // belonging to the entered categories
     long *arr_ftells = NULL;
     int max_elements = 10;
     arr_ftells = (long *)malloc(max_elements * sizeof(long));
@@ -120,6 +127,7 @@ long *searchByCategories()
     int index = 0;
     k = 0;
     int l = 0;
+    // Assigning values to arr_ftells
     while (fread(&b, sizeof(BOOK), 1, fptr))
     {
         for (int i = 0; i < 50; i++)
@@ -151,6 +159,7 @@ long *searchByCategories()
     }
 
     unique_index = 0;
+    // Removing duplicates
     for (int i = 0; i < index; i++)
     {
         int duplicate = 0;
@@ -173,6 +182,7 @@ long *searchByCategories()
 
     return arr_ftells;
 }
+
 /*
 compare(char**, char**) takes as input an array of words and
 returns the number of words common
@@ -182,7 +192,7 @@ int compare(char **str1, char **str2)
     int n, m;
     n = 0;
     m = 0;
-    int count = 0;
+    int count = 0; // counter variable to store the number of words in common
     while (str1[n] != NULL)
     {
         m = 0;
@@ -206,30 +216,36 @@ by white space
 */
 char **tokenize(char str[100])
 {
+    // Convert all characters in the string to lowercase
     for (int i = 0; i < strlen(str); i++)
     {
         str[i] = tolower(str[i]);
     }
-
+    // Allocate memory for an array of pointers to words
     char **words = (char **)malloc(MAX_WORDS * sizeof(char *));
+    // Allocate memory for each word
     for (int i = 0; i < MAX_WORDS; i++)
     {
         words[i] = (char *)malloc(MAX_WORD_LENGTH * sizeof(char));
     }
 
+    // Tokenize the string using space as the delimiter
     char *token = strtok(str, " ");
     int n = 0;
 
+    // Loop through each token and store it in the 'words' array
     while (token != NULL)
     {
-        words[n] = strdup(token);
+        words[n] = strdup(token); // Duplicate the token and store in 'words'
         n++;
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " "); // Move to the next token
     }
 
     words[n] = NULL;
-    return words;
+    // Set the last element of 'words' to NULL to mark the end
+    return words; // return array of words
 }
+
 /*
 searchByTitle() will take input from the user as to what
 title he/she wants to enter and it returns an array of long integers containing
@@ -251,15 +267,15 @@ long *searchByTitle(char str[100])
     int index = 0;
     char **words1;
     char **words2;
-    words1 = tokenize(str);
+    words1 = tokenize(str); // Storing the entered string as an array of words
     while (fread(&b, sizeof(BOOK), 1, fptr))
     {
-        words2 = tokenize(b.title);
-        result = compare(words1, words2);
+        words2 = tokenize(b.title);       // Storing each book title as an array of words
+        result = compare(words1, words2); // Comparing how many words are same
         if (result > 0)
         {
             arr[index] = result;
-            ftell_arr[index] = ftell(fptr);
+            ftell_arr[index] = ftell(fptr); // Updating ftell_arr
             index++;
         }
 
@@ -278,7 +294,7 @@ long *searchByTitle(char str[100])
         free(words1[i]);
     }
     free(words1);
-
+    // Sorting arr in descending order and appropriately re-arranging ftell_arr
     for (int i = 0; i < index - 1; i++)
     {
         for (int j = 0; j < index - i - 1; j++)
@@ -486,6 +502,17 @@ long *searchByFreeText(char str[100])
     unique_index = index;
     return ftell_arr;
 }
+
+/*
+This method provides a user-friendly, menu driven interface to browse the library
+database through various options by invoking the relevant methods defined above.
+
+This method returns the position of the BOOK struct sought by the user for issue.
+If the user does not want to issue, then -1 is returned.
+
+Care has been taken that no more than 10 books are displayed at a time to allow
+readability and navigation options are also there. Free text search has been implemented as well.
+*/
 long search()
 {
     FILE *fptr = fopen("./BooksDB/books.txt", "r+");

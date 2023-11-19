@@ -22,6 +22,7 @@ void view_issued_book(char u_id[10])
         perror("Error opening files");
         return;
     }
+    // printing required format
     printf("%-6s\t%-8s\t%-20s\t%-15s\t%-20s\t%-24s\t%-11s\n", "ISBN", "BOOK ID", "TITLE", "AUTHOR", "PUBLISHER", "DATE OF ISSUE", "DAYS LEFT");
     printf("%-6s\t%-8s\t%-20s\t%-15s\t%-20s\t%-24s\t%-11s\n", "====", "=======", "=====", "======", "=========", "=============", "==========");
 

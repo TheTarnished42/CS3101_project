@@ -27,7 +27,7 @@ void print_categories(BOOK b)
     fclose(catptr);
 }
 
-int remove_book()
+int remove_book(char *userid)
 {
     char isbn[14];
     system("clear");
@@ -154,6 +154,7 @@ int remove_book()
                 fseek(bksptr, -sizeof(BOOK), SEEK_CUR);
                 fwrite(&b, sizeof(BOOK), 1, bksptr);
                 printf("Updated.\n");
+                libraryLog(userid, 2);
                 printf("Press Enter to Continue");
                 getchar();
                 flag = 1;

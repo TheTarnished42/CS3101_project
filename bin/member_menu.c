@@ -2,13 +2,13 @@
 To displays the menu options available to the MEMBER
 */
 
-void member_menu(int *action)
+void member_menu(int *action) // this menu dislays all member options
 {
     system("clear");
     printf("You are in Library Menu!\n\n");
     printf("Code\t\tAction\n");
     printf("====\t\t====\n");
-    printf("[1]\t\tBrowse\n");
+    printf("[1]\t\tBrowse/Request Issue\n");
     printf("[2]\t\tSubmit Book\n");
     printf("[3]\t\tView Library Catalogue\n");
     printf("[4]\t\tView Your Current Issues\n");

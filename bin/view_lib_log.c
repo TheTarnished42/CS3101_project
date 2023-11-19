@@ -1,59 +1,135 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "structs.h"
 
-#define MAX_LINE_LENGTH 100
-
-
-void displayLogEntries(const char *filename, int startLine, int numLines) {
-    FILE *file = fopen(filename, "r");
-
-    if (file == NULL) {
-        perror("Error opening file");
-        exit(EXIT_FAILURE);
+void view_log() // log viewed
+{
+    FILE *file = fopen("./Log/log.txt", "rb");
+    fseek(file, -sizeof(LogEntry), SEEK_END);
+    if (file == NULL)
+    {
+        printf("Error opening log file!\n");
+        return;
     }
 
-    int count = 0;
-    char line[MAX_LINE_LENGTH];
+    printf("TIMESTAMP\t\tUSERID\t\t\tACTION\n");
+    printf("==========\t\t======\t\t\t======\n");
 
-    // Find the total number of lines in the file
-    while (fgets(line, sizeof(line), file) != NULL) {
-        count++;
-    }
-
-    // Move the file pointer to the starting line
-    rewind(file);
-    int currentLine = 0;
-
-    while (fgets(line, sizeof(line), file) != NULL) {
-        currentLine++;
-
-        // Display entries in reverse order (most recent first)
-        if (currentLine > count - startLine - numLines && currentLine <= count - startLine) {
-            printf("%s", line);
+    LogEntry logEntry;
+    char act[50];
+    int counter = 0;
+    while (fread(&logEntry, sizeof(LogEntry), 1, file))
+    {
+        switch (logEntry.userid[0])
+        {
+        case 'F':
+            switch (logEntry.action)
+            {
+            case 1:
+                strcpy(act, "Book Issued");
+                break;
+            case 2:
+                strcpy(act, "Submitted Book");
+                break;
+            case 3:
+                strcpy(act, "Viewed Catalogue");
+                break;
+            case 4:
+                strcpy(act, "Viewed Current Issues");
+                break;
+            case 0:
+                strcpy(act, "Logout");
+                break;
+            case -2:
+                strcpy(act, "Login");
+                break;
+            default:
+                strcpy(act, "Unknown Action");
+                break;
+            }
+            break;
+        case 'S':
+            switch (logEntry.action)
+            {
+            case 1:
+                strcpy(act, "Browsed");
+                break;
+            case 2:
+                strcpy(act, "Submitted");
+                break;
+            case 3:
+                strcpy(act, "Viewed Catalogue");
+                break;
+            case 4:
+                strcpy(act, "Viewed Current Issues");
+                break;
+            case 0:
+                strcpy(act, "Logout");
+                break;
+            case -2:
+                strcpy(act, "Login");
+                break;
+            default:
+                strcpy(act, "Unknown Action");
+                break;
+            }
+            break;
+        case 'A':
+            switch (logEntry.action)
+            {
+            case 1:
+                strcpy(act, "Book Added");
+                break;
+            case 2:
+                strcpy(act, "Book Removed");
+                break;
+            case 3:
+                strcpy(act, "Viewed current issued books");
+                break;
+            case 4:
+                strcpy(act, "Viewed log");
+                break;
+            case 5:
+                strcpy(act, "Added New User");
+                break;
+            case 6:
+                strcpy(act, "Viewed Catalogue");
+                break;
+            case 7:
+                strcpy(act, "Viewed user catalogue");
+                break;
+            case 0:
+                strcpy(act, "Logout");
+                break;
+            case -2:
+                strcpy(act, "Login");
+                break;
+            default:
+                strcpy(act, "Unknown Action");
+                break;
+            }
+            break;
+        default:
+            strcpy(act, "Unknown User");
+            break;
         }
+
+        printf("%-20s\t%-20s\t%s\n", logEntry.timestamp, logEntry.userid, act);
+        fseek(file, -2 * sizeof(logEntry), SEEK_CUR);
+        if (counter == 10)
+            break;
+        else
+            counter++;
     }
 
     fclose(file);
+    printf("\nLast 10 log entries printed.Press Enter to continue.\n");
+    getchar(); // Wait for Enter key press
 }
 
-void view_lib_log() {
-    int startLine = 0;
-    int numLines = 10;
-    char response;
-
-    do {
-        // Display log entries
-        displayLogEntries("./Log/log.txt", startLine, numLines);
-
-        // Ask user if they want to see the next set of entries
-        printf("Do you want to see the next %d entries? (y/n): ", numLines);
-        scanf(" %c", &response);
-
-        // Update starting line for the next set of entries
-        startLine += numLines;
-
-    } while (response == 'y' || response == 'Y');
-
-    
-}
-
+// int main()
+// {
+//     view_log();
+//     return 0;
+// }

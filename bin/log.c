@@ -1,36 +1,45 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include "structs.h"
 
-// Function to get current timestamp
-void getTimestamp(char *timestamp) {
+void libraryLog(char *userid, int action)
+{
+    FILE *logFile;
     time_t rawtime;
-    struct tm *info;
+    struct tm *timeinfo;
+
+    // Open the library log file in append mode
+    logFile = fopen("./Log/log.txt", "ab");
+
+    if (logFile == NULL)
+    {
+        printf("Error opening log file!\n");
+        exit(1);
+    }
+
+    // Get the current time
     time(&rawtime);
-    info = localtime(&rawtime);
-    strftime(timestamp, 20, "%Y-%m-%d %H:%M:%S", info);
-}
+    timeinfo = localtime(&rawtime);
 
-// Function to write data to file with headings
-void writeToLogFile(char *userid, int action) {
-    FILE *file = fopen("./Log/log.txt", "a"); // Open file in append mode
+    // Create a LogEntry structure and populate it with data
+    LogEntry logEntry;
+    strftime(logEntry.timestamp, sizeof(logEntry.timestamp), "%Y-%m-%d %H:%M:%S", timeinfo);
+    snprintf(logEntry.userid, sizeof(logEntry.userid), "%s", userid);
+    logEntry.action = action;
 
-    if (file == NULL) {
-        perror("Error opening file");
-        exit(EXIT_FAILURE);
+    // Write the log entry to the library log file using fwrite
+    if (fwrite(&logEntry, sizeof(LogEntry), 1, logFile) != 1)
+    {
+        printf("Error writing to log file!\n");
     }
 
-    char timestamp[20];
-    getTimestamp(timestamp);
-
-    // Write headings if the file is empty
-    fseek(file, 0, SEEK_END);
-    if (ftell(file) == 0) {
-        fprintf(file, "\tTimestamp\tUserID\tAction\n");
-    }
-
-    // Write data to file with two-tab separation
-    fprintf(file, "%s\t%s\t%d\n", timestamp,		userid, 	action);
-
-    fclose(file);
+    // Close the library log file
+    fclose(logFile);
 }
+
+// int main()
+// {
+
+// }

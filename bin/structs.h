@@ -40,11 +40,11 @@ typedef struct issue
     int issue_period[10];
 } ISSUE;
 
-typedef struct log
+typedef struct
 {
-    char userid[10];
-    char action[10];
-    time_t log_time;
-} LOG;
+    char timestamp[20];
+    char userid[20];
+    int action;
+} LogEntry;
 
 #endif // STRUCTS_H

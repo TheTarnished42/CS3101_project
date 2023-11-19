@@ -3,8 +3,9 @@
 #include <string.h>
 #include "structs.h"
 #include <ctype.h>
+/*This function includes the common functions called in remove_book and add_book*/
 
-int *searchBook(char *isbn)
+int *searchBook(char *isbn) // searches book by isbn
 {
     // printf("In searchbook\n\n");
     FILE *fptr;
@@ -18,7 +19,7 @@ int *searchBook(char *isbn)
     {
         if (strcmp(isbn, b1.isbn) == 0)
         {
-            // printf("\nBooks already exists!\n");
+            // printf("\nBooks already exists!\n"); //printing existing book details.
             printf("Existing Book Details:\n");
             printf("[1] ISBN: %s\n", b1.isbn);
             printf("[2] Title: %s\n", b1.title);
@@ -35,25 +36,25 @@ int *searchBook(char *isbn)
     return arr;
 }
 
-void add_categories()
+void add_categories() // This is used to add new categories to the Database to choose from
 {
     FILE *catptr;
     CAT c;
     c.no = 0;
-    catptr = fopen("./BooksDB/Categories.txt", "r+");
+    catptr = fopen("./BooksDB/Categories.txt", "r+"); // calling categories.txt
     while (fread(&c, sizeof(c), 1, catptr))
     {
     }
     c.no++;
     int flag = 0;
-    printf("\nADD NEW CATEGORIES (Enter 0 to STOP ADDING CATEGORIES)\n\n");
+    printf("\nADD NEW CATEGORIES (Enter 0 to STOP ADDING CATEGORIES)\n\n"); // Accepting new categories
 
     while (flag == 0)
     {
         int flag2;
         while (1)
         {
-            printf("NEW Category Name [%d]: ", (c.no));
+            printf("NEW Category Name [%d]: ", (c.no)); // input
             fgets(c.name, 20, stdin);
             c.name[strcspn(c.name, "\n")] = '\0';
             if (c.name[0] == '0')
@@ -63,7 +64,7 @@ void add_categories()
             }
             while (1)
             {
-                printf("Confirm New Category[1] or Enter Again[2]: ");
+                printf("Confirm New Category[1] or Enter Again[2]: "); // confirmation
                 scanf("%d", &flag2);
                 getchar();
                 if (flag2 == 1)
@@ -79,19 +80,19 @@ void add_categories()
                     printf("Invalid input.\n");
             }
         }
-        printf("Exited from ADD NEW CATEGORIES.\n");
+        printf("Exited from ADD NEW CATEGORIES.\n"); // exit
     }
     fclose(catptr);
 }
 
-void input_categories(BOOK *b)
+void input_categories(BOOK *b) // this is used to assign categories to books added by admin.
 {
 
     printf("#---------------------------------------------------------#\n");
     FILE *catptr;
     CAT c;
     catptr = fopen("./BooksDB/Categories.txt", "r+");
-    printf("--EXISTING CATEGORIES--\n");
+    printf("--EXISTING CATEGORIES--\n"); // printing existing categories
     while (fread(&c, sizeof(c), 1, catptr))
     {
         printf("[%d] %s\n", c.no, c.name);
@@ -101,7 +102,7 @@ void input_categories(BOOK *b)
     char yn[1];
     while (1)
     {
-        printf("\nDo you wish to ADD a NEW CATEGORY to the above list? [y/n]: ");
+        printf("\nDo you wish to ADD a NEW CATEGORY to the above list? [y/n]: "); // redirects to add_categories based on input
         scanf("%s", yn);
         if (tolower(yn[0]) == 'y')
         {
@@ -118,7 +119,7 @@ void input_categories(BOOK *b)
     }
     if (tolower(yn[0]) == 'y')
     {
-        catptr = fopen("./BooksDB/Categories.txt", "r+");
+        catptr = fopen("./BooksDB/Categories.txt", "r+"); // printing with new categories added
         printf("\n--EXISTING CATEGORIES (UPDATED)--\n");
         while (fread(&c, sizeof(c), 1, catptr))
         {
@@ -127,10 +128,10 @@ void input_categories(BOOK *b)
         printf("\n--------------------------------\n");
         fclose(catptr);
     }
-    printf("Multiple Categories can be assigned to one Book.\n");
+    printf("Multiple Categories can be assigned to one Book.\n"); // disclaimer
     printf("\nAssign Category to the book by entering SERIAL NUMBER as per the above list.\nENTER 0 to STOP assigning.\n");
 
-    while (1)
+    while (1) // assigning categories to books
     {
         int counter = 0;
         int sno[50];
@@ -145,7 +146,7 @@ void input_categories(BOOK *b)
                 counter++;
         }
         counter = 0;
-        printf("\nSerial Numbers of the Categories Assigned to the Book: ");
+        printf("\nSerial Numbers of the Categories Assigned to the Book: "); // for confirmation
         while (sno[counter] != 0)
         {
             printf("%d ", sno[counter]);
@@ -156,7 +157,7 @@ void input_categories(BOOK *b)
         scanf("%s", yn);
         if (tolower(yn[0]) == 'y')
         {
-            while (sno[counter] != 0)
+            while (sno[counter] != 0) // updating categories of the book variable
             {
                 b->categories[counter] = sno[counter];
                 b->categories[counter + 1] = 0; // Line added here by Ahan
@@ -167,7 +168,7 @@ void input_categories(BOOK *b)
         }
         else if (tolower(yn[0]) == 'n')
         {
-            printf("Re-enter[1] Don't Assign Categories[0]?: ");
+            printf("Re-enter[1] Don't Assign Categories[0]?: "); // categories assigned
             scanf("%d", &counter);
             if (counter == 0)
                 break;
@@ -178,7 +179,7 @@ void input_categories(BOOK *b)
     printf("#----------------------------------------------------------#\n\n");
 }
 
-long *searchBook2(char *isbn)
+long *searchBook2(char *isbn) // differs from searchbook() in that it does not print the book matched
 {
     // printf("In searchbook\n\n");
     FILE *fptr;
