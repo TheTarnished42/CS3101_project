@@ -33,8 +33,8 @@ do{
 */
         char *usertype = malloc(sizeof(char));
         char *password = malloc(20);
-        char *userid = malloc(20);
         char *username = malloc(20);
+        char *userid = malloc(20);
         // Take ACTION from the user and checking if it is valid or not
         int *action = malloc(sizeof(int));
 

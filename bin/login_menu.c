@@ -35,12 +35,14 @@ void login_menu(char *usertype, char *uid, char *password, char *username)
     MEMBER m;
 
     int flag=0;
+    int flag_1=0;
 
     while (fread(&m, sizeof(MEMBER), 1, file))
     {
         if (strcmp(uid, m.m_id) == 0)
-        {   printf("Welcome %s!\n",m.first_name);
-
+        {   system("clear");
+            printf("Welcome %s!\n",m.first_name);
+            flag_1=1;
             while(flag==0){
             password= getpass("Enter PASSWORD: ");
             // printf("Enter PASSWORD: ");
@@ -62,5 +64,12 @@ void login_menu(char *usertype, char *uid, char *password, char *username)
             }
         }
         }
+    }
+    if (flag_1==0)
+    {
+        printf("Invalid USER ID!\n");
+        printf("Enter to continue\n");
+        getchar();
+        getchar();
     }
 }
