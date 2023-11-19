@@ -1,20 +1,23 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "struct.h"
 
-void request_item(char *u_id, char utype, long pos)
+int request_item(char *u_id, char utype, long pos)
 {
     int issperiod;
     BOOK book;
     ISSUE us; 
     FILE *issfile;
     FILE *bkfile;
-    issfile = fopen("../Issues/issues.txt", "r+");
-    bkfile = fopen("../BooksDB/books.txt", "r+");
+
+    issfile = fopen("../bin/issues.txt", "r+");
+    bkfile = fopen("../bin/books.txt", "r+");
     fseek(bkfile, pos, SEEK_SET);
     fread(&book, sizeof(BOOK), 1, bkfile);
 
     int temp1 = book.available_copies;
+    int flag = 0;
     printf("Number of copies of the book available: %d\n", temp1);
 
     //Request issue:
@@ -23,17 +26,21 @@ void request_item(char *u_id, char utype, long pos)
     {
         if (strcmp(us.userid, u_id) == 0) 
         {
+            flag = 1;
             if (utype == 'u' && us.copies_issued >= 3)
             {
                 printf("MAX Issue limit reached, <returns to main>\n");
+                return 0;
             }
             else if (temp1==0)
             {
                 printf("No copies available.\n");
+                return 0;
             }
             else if (book.available_copies <= 3 && utype == 'u')
             {
                 printf("Cannot be issued to student, less than 3copies");
+                return 0;
             }
             else if (book.available_copies <= 3 && utype != 'u')
             {
@@ -55,11 +62,26 @@ void request_item(char *u_id, char utype, long pos)
                 issperiod = 30;
                 printf("You can issue this book for 30 days!\n");
             }
+            break;
         }
+    }
+
+    if (flag == 1)
+    {
+        strcpy(us.userid, u_id);
+        us.copies_issued = 0;
+        strcpy(us.issued_UID[0], book.available_UID[book.available_copies - 1]);
+        strcpy(us.issued_isbn[0], book.isbn);
+        time(&us.doi[0]);
+        us.issue_period[0] = issperiod;
+        fseek(issfile, -sizeof(ISSUE), SEEK_CUR);
+        fwrite(&us, sizeof(ISSUE), 1, issfile);
+        fclose(issfile);
     }
 
     //Update:
     int i;
+    issfile = fopen("../bin/issues.txt", "r+"); 
     while (fread(&us, sizeof(ISSUE), 1, issfile)) 
     {
         if (strcmp(us.userid, u_id) == 0)
@@ -73,7 +95,7 @@ void request_item(char *u_id, char utype, long pos)
                     strcpy(us.issued_isbn[i], book.isbn);
                     time(&us.doi[us.copies_issued]);
                     us.issue_period[i] = issperiod;
-                    fseek(issfile, -sizeof(ISSUE), 1);
+                    fseek(issfile, -sizeof(ISSUE), SEEK_CUR);
                     fwrite(&us, sizeof(ISSUE), 1, issfile); 
                     break;
                 }
@@ -95,10 +117,11 @@ void request_item(char *u_id, char utype, long pos)
     fclose(bkfile);
     printf("Book file updated successfully!\n");
 
+    return 0;
 
 }
 
-void submit_book(char *u_id)
+int submit_book(char *u_id)
 {
     ISSUE us;
     FILE *issfile;
@@ -116,7 +139,7 @@ void submit_book(char *u_id)
             }
             else
             {
-                printf("You have the following books issued:\n");
+                printf("You have the following books issued (Enter 0 FOR BACK TO MENU):\n");
                 for (int i = 0; i < us.copies_issued; i++)
                 {
                     printf("[%d] %s\n", (i + 1), us.issued_isbn[i]);
@@ -124,6 +147,10 @@ void submit_book(char *u_id)
 
                 printf("\n Enter the Serial No. of the book to be returned: ");
                 scanf("%d", &index);
+                getchar();
+                if (index == 0)
+                return 0;
+
                 index--;
                 time_t now;
                 time(&now);
@@ -187,4 +214,12 @@ void submit_book(char *u_id)
         }
     }
 
+}
+
+void main()
+{
+    char *id = "SNM00002";
+    char type = 'u';
+    long p = 1424; 
+    request_item(id, type, p);
 }
