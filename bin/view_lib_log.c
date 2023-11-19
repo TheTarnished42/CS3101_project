@@ -5,6 +5,7 @@
 
 void view_log() // log viewed
 {
+    system("clear");
     FILE *file = fopen("./Log/log.txt", "rb");
     fseek(file, -sizeof(LogEntry), SEEK_END);
     if (file == NULL)
@@ -124,7 +125,7 @@ void view_log() // log viewed
     }
 
     fclose(file);
-    printf("\nLast 10 log entries printed.Press Enter to continue.\n");
+    printf("\nLast 10 log entries printed. Press Enter to continue.\n");
     getchar(); // Wait for Enter key press
 }
 

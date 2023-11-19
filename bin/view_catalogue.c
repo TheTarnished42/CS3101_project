@@ -17,7 +17,7 @@ void view_catalogue()
         if (counter % 10 == 0) // printing only 10 entries at once
         {
             char yn;
-            printf("Look at next the 10 books? [y/n]: ");
+            printf("\nLook at next the 10 books? [y/n]: ");
             scanf("%c", &yn);
             getchar();
             if (tolower(yn) == 'y')
