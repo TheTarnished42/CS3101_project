@@ -55,8 +55,7 @@ void view_current_issue()
     }
 
     fclose(fptr);
-    printf("Enter to continue.\n");
-    getchar();
+    printf("\nEnter to continue.\n");
     getchar();
 }
 

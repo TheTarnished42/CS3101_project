@@ -75,7 +75,8 @@ void add_categories() // This is used to add new categories to the Database to c
                     break;
                 }
                 else if (flag2 == 2)
-                    printf("Enter Again.\n");
+                   { printf("Enter Again.\n");
+                        break;}
                 else
                     printf("Invalid input.\n");
             }

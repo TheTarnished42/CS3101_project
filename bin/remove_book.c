@@ -31,8 +31,8 @@ int remove_book(char *userid)
 {
     char isbn[14];
     system("clear");
-    printf("You are in Remove Book.\n");
-    printf("Enter the isbn of book you want to edit: ");
+    printf("You are in REMOVE/UPDATE BOOK.\n\n");
+    printf("Enter the ISBN of book you want to edit: ");
     scanf("%s", isbn);
     getchar();
     long *searchres;
@@ -114,7 +114,6 @@ int remove_book(char *userid)
                 int copyno = 0;
                 printf("Enter the number of copies to be removed: ");
                 scanf("%d", &copyno);
-                printf("%d\n", copyno);
                 getchar();
                 if (b.available_copies >= copyno)
                 {
@@ -168,7 +167,7 @@ int remove_book(char *userid)
     }
     else
     {
-        printf("Said isbn doesnot exist.\n");
+        printf("Said ISBN does not exist.\n");
     }
 }
 // void main()

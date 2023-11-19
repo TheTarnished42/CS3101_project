@@ -99,6 +99,7 @@ int issue_book(char *userid, char utype, long pos) // updatesbooks.txt and issue
             printf("MAX Issue limit reached, return a book first.\n");
             printf("Press Enter to continue.");
             getchar();
+            getchar();
             return 0;
         }
         strcpy(issue.issued_UID[issue.copies_issued], b.available_UID[b.available_copies - 1]);

@@ -164,6 +164,7 @@ int main()
                                         if (pos != -1)
                                         {
                                                 // printf("Position of book is %ld", pos);
+                                                system("clear");
                                                 issue_book(userid, *usertype, pos);
                                         }
                                         break;
@@ -195,7 +196,7 @@ int main()
                                         long pos = search();
                                         if (pos != -1)
                                         {
-                                                printf("Position of book is %ld", pos);
+                                                system("clear");
                                                 issue_book(userid, *usertype, pos);
                                         }
                                         break;
@@ -207,6 +208,11 @@ int main()
                                 case 3:
                                         getchar();
                                         view_catalogue();
+                                        break;
+                                case 4:
+                                        getchar();
+                                        view_issued_book(userid);
+                                        libraryLog(userid, 4);
                                         break;
                                 case 0:
                                         flag_3 = 0;
