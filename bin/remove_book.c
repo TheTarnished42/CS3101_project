@@ -75,7 +75,7 @@ int remove_book(char *userid)
             printf("\nEnter your choice: ");
             scanf("%d", choice);
             getchar();
-            printf("%d", *choice);
+            //printf("%d", *choice);
             if (*choice == 0)
             {
                 return 0;
@@ -168,6 +168,8 @@ int remove_book(char *userid)
     else
     {
         printf("Said ISBN does not exist.\n");
+                printf("Press Enter to Continue");
+                getchar();
     }
 }
 // void main()
